@@ -34,7 +34,7 @@ def test_native_tx(cronos):
         "accountNumber": int(src_account["base_account"]["account_number"]),
         "pubkey": json.loads(cli.address(src, "acc", "pubkey"))["key"],
     }
-    denom = "basetcro"
+    denom = "basebfh"
     dst_addr = cli.address("signer1")
     gas = "200000"
     fee = {

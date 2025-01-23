@@ -73,7 +73,7 @@ func Test_validateIsBool(t *testing.T) {
 
 func Test_validateIsAddress(t *testing.T) {
 	config := sdk.GetConfig()
-	config.SetBech32PrefixForAccount("crc", "crc"+sdk.PrefixPublic)
+	config.SetBech32PrefixForAccount("bfh", "bfh"+sdk.PrefixPublic)
 
 	type args struct {
 		i interface{}

@@ -12,7 +12,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	ibctransfertypes "github.com/cosmos/ibc-go/v3/modules/apps/transfer/types"
 	ibcclienttypes "github.com/cosmos/ibc-go/v3/modules/core/02-client/types"
-	"github.com/crypto-org-chain/cronos/x/cronos/types"
+	"github.com/monk07-01/bfhevm/x/cronos/types"
 )
 
 func (k Keeper) ConvertVouchersToEvmCoins(ctx sdk.Context, from string, coins sdk.Coins) error {
@@ -35,7 +35,7 @@ func (k Keeper) ConvertVouchersToEvmCoins(ctx sdk.Context, from string, coins sd
 			if err != nil {
 				return err
 			}
-			// Compute new amount, because basecro is a 8 decimals token, we need to multiply by 10^10 to make it
+			// Compute new amount, because basebfh is a 8 decimals token, we need to multiply by 10^10 to make it
 			// a 18 decimals token
 			amount18dec := sdk.NewCoin(evmParams.EvmDenom, c.Amount.Mul(sdk.NewIntFromBigInt(types.TenPowTen)))
 
@@ -126,7 +126,7 @@ func (k Keeper) IbcTransferCoins(ctx sdk.Context, from, destination string, coin
 			}
 
 		default:
-			if !types.IsValidIBCDenom(c.Denom) && !types.IsValidCronosDenom(c.Denom) {
+			if !types.IsValidIBCDenom(c.Denom) && !types.IsValidbfhevmdenom(c.Denom) {
 				return fmt.Errorf("the coin %s is neither an ibc voucher or a cronos token", c.Denom)
 			}
 			_, found := k.GetContractByDenom(ctx, c.Denom)

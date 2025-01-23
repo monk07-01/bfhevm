@@ -1,7 +1,7 @@
 local config = import 'default.jsonnet';
 
 config {
-  'cronos_777-1'+: {
+  'bfhevm_777-1'+: {
     'account-prefix': 'crc',
     'coin-type': 60,
     key_name: 'signer1',
@@ -11,7 +11,7 @@ config {
     'start-flags': '--trace',
     'account-prefix': 'cro',
     'app-config': {
-      'minimum-gas-prices': '500basecro',
+      'minimum-gas-prices': '500basebfh',
     },
     validators: [
       {
@@ -59,7 +59,7 @@ config {
             max_deposit_period: '1814400s',
             min_deposit: [
               {
-                denom: 'basecro',
+                denom: 'basebfh',
                 amount: '10000000',
               },
             ],
@@ -94,7 +94,7 @@ config {
     },
     chains: [
       {
-        id: 'cronos_777-1',
+        id: 'bfhevm_777-1',
         address_type: {
           derivation: 'ethermint',
           proto_type: {
@@ -104,14 +104,14 @@ config {
         max_gas: 500000,
         gas_price: {
           price: 10000000000000,
-          denom: 'basetcro',
+          denom: 'basebfh',
         },
       },
       {
         id: 'chainmain-1',
         gas_price: {
           price: 1000000,
-          denom: 'basecro',
+          denom: 'basebfh',
         },
       },
     ],

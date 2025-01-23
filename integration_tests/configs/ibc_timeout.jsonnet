@@ -1,7 +1,7 @@
 local ibc = import 'ibc.jsonnet';
 
 ibc {
-  'cronos_777-1'+: {
+  'bfhevm_777-1'+: {
     genesis+: {
       app_state+: {
         cronos+: {

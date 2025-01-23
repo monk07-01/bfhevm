@@ -8,7 +8,7 @@ import bech32
 from dateutil.parser import isoparse
 from pystarport.utils import build_cli_args_safe, format_doc_string, interact
 
-DEFAULT_GAS_PRICE = "5000000000000basetcro"
+DEFAULT_GAS_PRICE = "5000000000000basebfh"
 
 
 class ModuleAccount(enum.Enum):
@@ -156,7 +156,7 @@ class CosmosCLI:
             self.raw("query", "bank", "balances", addr, home=self.data_dir)
         )["balances"]
 
-    def balance(self, addr, denom="basetcro"):
+    def balance(self, addr, denom="basebfh"):
         denoms = {coin["denom"]: int(coin["amount"]) for coin in self.balances(addr)}
         return denoms.get(denom, 0)
 

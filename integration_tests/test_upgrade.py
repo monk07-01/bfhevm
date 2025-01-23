@@ -27,7 +27,7 @@ def post_init(path, base_port, config):
     """
     prepare cosmovisor for each node
     """
-    chain_id = "cronos_777-1"
+    chain_id = "bfhevm_777-1"
     cfg = json.loads((path / chain_id / "config.json").read_text())
     for i, _ in enumerate(cfg["validators"]):
         home = path / chain_id / f"node{i}"
@@ -45,7 +45,7 @@ def post_init(path, base_port, config):
             ini[section].update(
                 {
                     "command": f"cosmovisor start --home %(here)s/node{i}",
-                    "environment": f"DAEMON_NAME=cronosd,DAEMON_HOME=%(here)s/node{i}",
+                    "environment": f"DAEMON_NAME=bfhevmd,DAEMON_HOME=%(here)s/node{i}",
                 }
             )
     with ini_path.open("w") as fp:
@@ -69,7 +69,7 @@ def custom_cronos(tmp_path_factory):
         26100,
         Path(__file__).parent / "configs/cosmovisor.jsonnet",
         post_init=post_init,
-        chain_binary=str(path / "upgrades/genesis/bin/cronosd"),
+        chain_binary=str(path / "upgrades/genesis/bin/bfhevmd"),
     )
 
 
@@ -92,7 +92,7 @@ def test_cosmovisor_upgrade(custom_cronos: Cronos):
             "title": "upgrade test",
             "description": "ditto",
             "upgrade-height": target_height,
-            "deposit": "10000basetcro",
+            "deposit": "10000basebfh",
         },
     )
     assert rsp["code"] == 0, rsp["raw_log"]

@@ -45,16 +45,16 @@ jobs:
           BUILD_TYPE="tarball"
           FLAKE="github:${GITHUB_REPOSITORY}/${GITHUB_REF_NAME}"
 
-          nix build -L ${FLAKE}#cronosd-$BUILD_TYPE
+          nix build -L ${FLAKE}#bfhevmd-$BUILD_TYPE
           cp result cronos_${GITHUB_REF_NAME:1}-rocksdb_${PLATFORM}.tar.gz
 
-          nix build -L ${FLAKE}#cronosd-goleveldb-$BUILD_TYPE
+          nix build -L ${FLAKE}#bfhevmd-goleveldb-$BUILD_TYPE
           cp result cronos_${GITHUB_REF_NAME:1}_${PLATFORM}.tar.gz
 
-          nix build -L ${FLAKE}#cronosd-testnet-$BUILD_TYPE
+          nix build -L ${FLAKE}#bfhevmd-testnet-$BUILD_TYPE
           cp result cronos_${GITHUB_REF_NAME:1}-testnet-rocksdb_${PLATFORM}.tar.gz
 
-          nix build -L ${FLAKE}#cronosd-testnet-goleveldb-$BUILD_TYPE
+          nix build -L ${FLAKE}#bfhevmd-testnet-goleveldb-$BUILD_TYPE
           cp result cronos_${GITHUB_REF_NAME:1}-testnet_${PLATFORM}.tar.gz
 
           nix-env -i coreutils -f '<nixpkgs>'
@@ -93,16 +93,16 @@ jobs:
           BUILD_TYPE="tarball"
           FLAKE="github:${GITHUB_REPOSITORY}/${GITHUB_REF_NAME}"
 
-          nix build -L --extra-platforms aarch64-linux ${FLAKE}#packages.aarch64-linux.cronosd-$BUILD_TYPE
+          nix build -L --extra-platforms aarch64-linux ${FLAKE}#packages.aarch64-linux.bfhevmd-$BUILD_TYPE
           cp result cronos_${GITHUB_REF_NAME:1}-rocksdb_${PLATFORM}.tar.gz
 
-          nix build -L --extra-platforms aarch64-linux ${FLAKE}#packages.aarch64-linux.cronosd-goleveldb-$BUILD_TYPE
+          nix build -L --extra-platforms aarch64-linux ${FLAKE}#packages.aarch64-linux.bfhevmd-goleveldb-$BUILD_TYPE
           cp result cronos_${GITHUB_REF_NAME:1}_${PLATFORM}.tar.gz
 
-          nix build -L --extra-platforms aarch64-linux ${FLAKE}#packages.aarch64-linux.cronosd-testnet-$BUILD_TYPE
+          nix build -L --extra-platforms aarch64-linux ${FLAKE}#packages.aarch64-linux.bfhevmd-testnet-$BUILD_TYPE
           cp result cronos_${GITHUB_REF_NAME:1}-testnet-rocksdb_${PLATFORM}.tar.gz
 
-          nix build -L --extra-platforms aarch64-linux ${FLAKE}#packages.aarch64-linux.cronosd-testnet-goleveldb-$BUILD_TYPE
+          nix build -L --extra-platforms aarch64-linux ${FLAKE}#packages.aarch64-linux.bfhevmd-testnet-goleveldb-$BUILD_TYPE
           cp result cronos_${GITHUB_REF_NAME:1}-testnet_${PLATFORM}.tar.gz
 
           sha256sum *.tar.gz > checksums-$PLATFORM.txt
@@ -150,7 +150,7 @@ jobs:
           pacman -U mingw-w64-x86_64-rocksdb-6.26.1-1-any.pkg.tar.zst --noconfirm
           COSMOS_BUILD_OPTIONS=rocksdb make      
           ls -la ./build/
-          mv ./build/cronosd ./build/cronosd.exe
+          mv ./build/bfhevmd ./build/bfhevmd.exe
           cp /mingw64/bin/libbz2-1.dll ./build 
           cp /mingw64/bin/libgcc_s_seh-1.dll ./build
           cp /mingw64/bin/liblz4.dll ./build

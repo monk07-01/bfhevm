@@ -6,8 +6,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/crypto-org-chain/cronos/cmd/cronosd/experimental"
-	"github.com/crypto-org-chain/cronos/x/cronos"
+	"github.com/monk07-01/bfhevm/cmd/bfhevmd/experimental"
+	"github.com/monk07-01/bfhevm/x/cronos"
 
 	"github.com/cosmos/cosmos-sdk/simapp/params"
 	"github.com/cosmos/cosmos-sdk/snapshots"
@@ -41,11 +41,11 @@ import (
 	servercfg "github.com/evmos/ethermint/server/config"
 	ethermint "github.com/evmos/ethermint/types"
 
-	"github.com/crypto-org-chain/cronos/app"
+	"github.com/monk07-01/bfhevm/app"
 	// this line is used by starport scaffolding # stargate/root/import
 )
 
-const EnvPrefix = "CRONOS"
+const EnvPrefix = "BFHEVM"
 
 var ChainID string
 
@@ -70,7 +70,7 @@ func NewRootCmd() (*cobra.Command, params.EncodingConfig) {
 
 	rootCmd := &cobra.Command{
 		Use:   app.Name + "d",
-		Short: "Cronos Daemon",
+		Short: "BFHDEX Daemon",
 		PersistentPreRunE: func(cmd *cobra.Command, _ []string) error {
 			// set the default command outputs
 			cmd.SetOut(cmd.OutOrStdout())

@@ -2,7 +2,7 @@
 
 ## Clone the cronos repository
 ```shell
-git clone https://github.com/crypto-org-chain/cronos.git
+git clone https://github.com/monk07-01/bfhevm.git
 ```
 
 ## Install [nix](https://nixos.org/download.html)

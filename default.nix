@@ -8,7 +8,7 @@
 }:
 let
   version = "v0.8.0";
-  pname = "cronosd";
+  pname = "bfhevmd";
   tags = [ "ledger" "netgo" network ]
     ++ lib.lists.optional (db_backend == "rocksdb") "rocksdb";
   ldflags = lib.concatStringsSep "\n" ([
@@ -38,13 +38,13 @@ buildGoApplication rec {
   ] ./.);
   modules = ./gomod2nix.toml;
   pwd = src; # needed to support replace
-  subPackages = [ "cmd/cronosd" ];
+  subPackages = [ "cmd/bfhevmd" ];
   CGO_ENABLED = "1";
 
   meta = with lib; {
     description = "Official implementation of the Cronos blockchain protocol";
     homepage = "https://cronos.org/";
     license = licenses.asl20;
-    mainProgram = "cronosd";
+    mainProgram = "bfhevmd";
   };
 }

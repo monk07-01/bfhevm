@@ -3,9 +3,9 @@ before:
   - go mod download
 
 builds:
-  - id: "cronosd-darwin-arm64"
-    main: ./cmd/cronosd
-    binary: bin/cronosd
+  - id: "bfhevmd-darwin-arm64"
+    main: ./cmd/bfhevmd
+    binary: bin/bfhevmd
     env:
       - CGO_ENABLED=1
       - CC=oa64-clang
@@ -17,10 +17,10 @@ builds:
     flags:
       - -tags=ledger,cgo
     ldflags:
-      - -s -w -X github.com/cosmos/cosmos-sdk/version.Name=cronos -X github.com/cosmos/cosmos-sdk/version.AppName=cronosd -X github.com/cosmos/cosmos-sdk/version.Version={{.Version}} -X github.com/cosmos/cosmos-sdk/version.Commit={{.Commit}}
-  - id: "cronosd-windows"
-    main: ./cmd/cronosd
-    binary: bin/cronosd
+      - -s -w -X github.com/cosmos/cosmos-sdk/version.Name=cronos -X github.com/cosmos/cosmos-sdk/version.AppName=bfhevmd -X github.com/cosmos/cosmos-sdk/version.Version={{.Version}} -X github.com/cosmos/cosmos-sdk/version.Commit={{.Commit}}
+  - id: "bfhevmd-windows"
+    main: ./cmd/bfhevmd
+    binary: bin/bfhevmd
     env:
       - CGO_ENABLED=1
       - CC=x86_64-w64-mingw32-gcc
@@ -33,10 +33,10 @@ builds:
       - -tags=ledger,cgo
       - -buildmode=exe
     ldflags:
-      - -s -w -X github.com/cosmos/cosmos-sdk/version.Name=cronos -X github.com/cosmos/cosmos-sdk/version.AppName=cronosd -X github.com/cosmos/cosmos-sdk/version.Version={{.Version}} -X github.com/cosmos/cosmos-sdk/version.Commit={{.Commit}}
-  - id: "cronosd-darwin-arm64-testnet"
-    main: ./cmd/cronosd
-    binary: bin/cronosd
+      - -s -w -X github.com/cosmos/cosmos-sdk/version.Name=cronos -X github.com/cosmos/cosmos-sdk/version.AppName=bfhevmd -X github.com/cosmos/cosmos-sdk/version.Version={{.Version}} -X github.com/cosmos/cosmos-sdk/version.Commit={{.Commit}}
+  - id: "bfhevmd-darwin-arm64-testnet"
+    main: ./cmd/bfhevmd
+    binary: bin/bfhevmd
     env:
       - CGO_ENABLED=1
       - CC=oa64-clang
@@ -48,10 +48,10 @@ builds:
     flags:
       - -tags=testnet,ledger,cgo
     ldflags:
-      - -s -w -X github.com/cosmos/cosmos-sdk/version.Name=cronos -X github.com/cosmos/cosmos-sdk/version.AppName=cronosd -X github.com/cosmos/cosmos-sdk/version.Version={{.Version}}-testnet -X github.com/cosmos/cosmos-sdk/version.Commit={{.Commit}}
-  - id: "cronosd-windows-testnet"
-    main: ./cmd/cronosd
-    binary: bin/cronosd
+      - -s -w -X github.com/cosmos/cosmos-sdk/version.Name=cronos -X github.com/cosmos/cosmos-sdk/version.AppName=bfhevmd -X github.com/cosmos/cosmos-sdk/version.Version={{.Version}}-testnet -X github.com/cosmos/cosmos-sdk/version.Commit={{.Commit}}
+  - id: "bfhevmd-windows-testnet"
+    main: ./cmd/bfhevmd
+    binary: bin/bfhevmd
     env:
       - CGO_ENABLED=1
       - CC=x86_64-w64-mingw32-gcc
@@ -64,7 +64,7 @@ builds:
       - -tags=testnet,ledger,cgo
       - -buildmode=exe
     ldflags:
-      - -s -w -X github.com/cosmos/cosmos-sdk/version.Name=cronos -X github.com/cosmos/cosmos-sdk/version.AppName=cronosd -X github.com/cosmos/cosmos-sdk/version.Version={{.Version}}-testnet -X github.com/cosmos/cosmos-sdk/version.Commit={{.Commit}}
+      - -s -w -X github.com/cosmos/cosmos-sdk/version.Name=cronos -X github.com/cosmos/cosmos-sdk/version.AppName=bfhevmd -X github.com/cosmos/cosmos-sdk/version.Version={{.Version}}-testnet -X github.com/cosmos/cosmos-sdk/version.Commit={{.Commit}}
 
 archives:
 - id: mainnet
@@ -77,8 +77,8 @@ archives:
     - goos: windows
       format: zip
   builds:
-  - cronosd-darwin-arm64
-  - cronosd-windows
+  - bfhevmd-darwin-arm64
+  - bfhevmd-windows
 - id: testnet
   name_template: '{{ .ProjectName }}_{{ .Version }}-testnet_{{ .Os }}_{{ .Arch }}'
   replacements:
@@ -89,8 +89,8 @@ archives:
     - goos: windows
       format: zip
   builds:
-    - cronosd-darwin-arm64-testnet
-    - cronosd-windows-testnet
+    - bfhevmd-darwin-arm64-testnet
+    - bfhevmd-windows-testnet
  
 checksum:
   name_template: 'checksums-others.txt'

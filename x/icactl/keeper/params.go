@@ -4,7 +4,7 @@ import (
 	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/crypto-org-chain/cronos/x/icactl/types"
+	"github.com/monk07-01/bfhevm/x/icactl/types"
 )
 
 // GetParams get all parameters as types.Params

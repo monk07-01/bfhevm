@@ -40,13 +40,13 @@
         rec {
           packages = pkgs.cronos-matrix;
           apps = {
-            cronosd = mkApp packages.cronosd;
-            cronosd-testnet = mkApp packages.cronosd-testnet;
+            bfhevmd = mkApp packages.bfhevmd;
+            bfhevmd-testnet = mkApp packages.bfhevmd-testnet;
           };
-          defaultPackage = packages.cronosd;
-          defaultApp = apps.cronosd;
+          defaultPackage = packages.bfhevmd;
+          defaultApp = apps.bfhevmd;
           devShells = {
-            cronosd = pkgs.mkShell {
+            bfhevmd = pkgs.mkShell {
               buildInputs = with pkgs; [
                 go_1_18
                 rocksdb
@@ -54,7 +54,7 @@
               ];
             };
           };
-          devShell = devShells.cronosd;
+          devShell = devShells.bfhevmd;
         }
       )
     ) // {
@@ -86,24 +86,24 @@
           binaries = builtins.listToAttrs (builtins.map
             ({ db_backend, network, pkgtype }: {
               name = builtins.concatStringsSep "-" (
-                [ "cronosd" ] ++
+                [ "bfhevmd" ] ++
                 lib.optional (network != "mainnet") network ++
                 lib.optional (db_backend != "rocksdb") db_backend ++
                 lib.optional (pkgtype != "nix") pkgtype
               );
               value =
                 let
-                  cronosd = callPackage ./. {
+                  bfhevmd = callPackage ./. {
                     inherit rev db_backend network;
                   };
-                  bundle = bundle-exe cronosd;
+                  bundle = bundle-exe bfhevmd;
                 in
                 if pkgtype == "bundle" then
                   bundle
                 else if pkgtype == "tarball" then
                   make-tarball bundle
                 else
-                  cronosd;
+                  bfhevmd;
             })
             matrix
           );

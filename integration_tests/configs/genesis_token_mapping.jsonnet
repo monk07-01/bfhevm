@@ -1,7 +1,7 @@
 local config = import 'default.jsonnet';
 
 config {
-  'cronos_777-1'+: {
+  'bfhevm_777-1'+: {
     'start-flags': '--trace --unsafe-experimental --inv-check-period 5',
     'app-config'+: {
       'minimum-gas-prices':: super['minimum-gas-prices'],
@@ -11,7 +11,7 @@ config {
     },
     accounts: [{
       name: 'community',
-      coins: '10000000000000000000000basetcro',
+      coins: '10000000000000000000000basebfh',
       mnemonic: '${COMMUNITY_MNEMONIC}',
     }],
     genesis+: {

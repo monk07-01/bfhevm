@@ -21,17 +21,17 @@ keystore = "/tmp/keystore"
 
 [gravity]
 contract = "0x0000000000000000000000000000000000000000" # TODO - gravity contract address on Ethereum network
-fees_denom = "basetcro"
+fees_denom = "basebfh"
 
 [ethereum]
 key_derivation_path = "m/44'/60'/0'/0/0"
 rpc = "http://localhost:8545" # TODO - EVM RPC of Ethereum node
 
 [cosmos]
-gas_price = { amount = 5000000000000, denom = "basetcro" } # TODO basecro for mainnet, basetcro for testnet
+gas_price = { amount = 5000000000000, denom = "basebfh" } # TODO basebfh for mainnet, basebfh for testnet
 grpc = "http://localhost:9090" # TODO - GRPC of Cronos node
 key_derivation_path = "m/44'/60'/0'/0/0"
-prefix = "tcrc" # TODO - crc for mainnet, tcrc for testnet
+prefix = bfh # TODO - crc for mainnet, tcrc for testnet
 
 [metrics]
 listen_addr = "127.0.0.1:3000"
@@ -82,17 +82,17 @@ keystore = "Aws"
 
 [gravity]
 contract = "0x0000000000000000000000000000000000000000" # TODO - gravity contract address on Ethereum network
-fees_denom = "basetcro"
+fees_denom = "basebfh"
 
 [ethereum]
 key_derivation_path = "m/44'/60'/0'/0/0"
 rpc = "http://localhost:8545" # TODO - EVM RPC of Ethereum node
 
 [cosmos]
-gas_price = { amount = 5000000000000, denom = "basetcro" } # TODO basecro for mainnet, basetcro for testnet
+gas_price = { amount = 5000000000000, denom = "basebfh" } # TODO basebfh for mainnet, basebfh for testnet
 grpc = "http://localhost:9090" # TODO - GRPC of Cronos node
 key_derivation_path = "m/44'/60'/0'/0/0"
-prefix = "tcrc" # TODO - crc for mainnet, tcrc for testnet
+prefix = bfh # TODO - crc for mainnet, tcrc for testnet
 
 [metrics]
 listen_addr = "127.0.0.1:3000"

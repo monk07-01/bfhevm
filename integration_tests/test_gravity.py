@@ -46,7 +46,7 @@ def gorc_config(keystore, gravity_contract, eth_rpc, cosmos_grpc, metrics_listen
         "keystore": str(keystore),
         "gravity": {
             "contract": gravity_contract,
-            "fees_denom": "basetcro",
+            "fees_denom": "basebfh",
         },
         "ethereum": {
             "key_derivation_path": "m/44'/60'/0'/0/0",
@@ -55,11 +55,11 @@ def gorc_config(keystore, gravity_contract, eth_rpc, cosmos_grpc, metrics_listen
         "cosmos": {
             "gas_price": {
                 "amount": 5000000000000,
-                "denom": "basetcro",
+                "denom": "basebfh",
             },
             "grpc": cosmos_grpc,
             "key_derivation_path": "m/44'/60'/0'/0/0",
-            "prefix": "crc",
+            "prefix": bfh,
         },
         "metrics": {
             "listen_addr": metrics_listen,
@@ -125,7 +125,7 @@ def gravity(cronos, geth):
     - deploy gravity contract
     - start orchestrator
     """
-    chain_id = "cronos_777-1"
+    chain_id = "bfhevm_777-1"
 
     # set-delegate-keys
     for i, val in enumerate(cronos.config["validators"]):
@@ -158,7 +158,7 @@ def gravity(cronos, geth):
         acc_addr = gorc.show_cosmos_addr("cronos")
         print("fund 100cro to address", acc_addr)
         rsp = cronos.cosmos_cli().transfer(
-            "community", acc_addr, "%dbasetcro" % (100 * (10**18))
+            "community", acc_addr, "%dbasebfh" % (100 * (10**18))
         )
         assert rsp["code"] == 0, rsp["raw_log"]
 
@@ -333,7 +333,7 @@ def test_gov_token_mapping(gravity):
         cli.query_contract_by_denom(denom)
 
     rsp = cli.gov_propose_token_mapping_change(
-        denom, crc21.address, "", 0, from_="community", deposit="1basetcro"
+        denom, crc21.address, "", 0, from_="community", deposit="1basebfh"
     )
     assert rsp["code"] == 0, rsp["raw_log"]
 

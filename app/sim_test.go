@@ -34,7 +34,7 @@ import (
 	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
-	cronosmoduletypes "github.com/crypto-org-chain/cronos/x/cronos/types"
+	cronosmoduletypes "github.com/monk07-01/bfhevm/x/cronos/types"
 )
 
 // Get flags every time the simulator is run

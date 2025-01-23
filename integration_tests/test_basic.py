@@ -131,7 +131,7 @@ def test_statesync(cronos):
     # DEPRECATED: Do a tx bank transaction
     # from_addr = "crc1q04jewhxw4xxu3vlg3rc85240h9q7ns6hglz0g"
     # to_addr = "crc16z0herz998946wr659lr84c8c556da55dc34hh"
-    # coins = "10basetcro"
+    # coins = "10basebfh"
     # node = cronos.node_rpc(0)
     # txhash_0 = cronos.cosmos_cli(0).transfer(from_addr, to_addr, coins)["txhash"]
 
@@ -166,7 +166,7 @@ def test_statesync(cronos):
     # We can only create a new node with statesync config
     data = Path(cronos.base_dir).parent  # Same data dir as cronos fixture
     chain_id = cronos.config["chain_id"]  # Same chain_id as cronos fixture
-    cmd = "cronosd"
+    cmd = "bfhevmd"
     # create a clustercli object from ClusterCLI class
     clustercli = cluster.ClusterCLI(data, cmd=cmd, chain_id=chain_id)
     # create a new node with statesync enabled

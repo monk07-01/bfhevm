@@ -2,8 +2,8 @@ package icactl
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/crypto-org-chain/cronos/x/icactl/keeper"
-	"github.com/crypto-org-chain/cronos/x/icactl/types"
+	"github.com/monk07-01/bfhevm/x/icactl/keeper"
+	"github.com/monk07-01/bfhevm/x/icactl/types"
 )
 
 // InitGenesis initializes the capability module's state from a provided genesis

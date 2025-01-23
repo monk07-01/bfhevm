@@ -11,7 +11,7 @@ import (
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	"github.com/ethereum/go-ethereum/common"
 
-	"github.com/crypto-org-chain/cronos/x/cronos/types"
+	"github.com/monk07-01/bfhevm/x/cronos/types"
 )
 
 type (

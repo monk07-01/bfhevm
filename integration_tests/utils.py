@@ -31,7 +31,7 @@ ACCOUNTS = {
 }
 KEYS = {name: account.key for name, account in ACCOUNTS.items()}
 ADDRS = {name: account.address for name, account in ACCOUNTS.items()}
-CRONOS_ADDRESS_PREFIX = "crc"
+CRONOS_ADDRESS_PREFIX = bfh
 TEST_CONTRACTS = {
     "Gravity": "Gravity.sol",
     "Greeter": "Greeter.sol",
@@ -413,7 +413,7 @@ def modify_command_in_supervisor_config(ini: Path, fn, **kwargs):
     "replace the first node with the instrumented binary"
     ini.write_text(
         re.sub(
-            r"^command = (cronosd .*$)",
+            r"^command = (bfhevmd .*$)",
             lambda m: f"command = {fn(m.group(1))}",
             ini.read_text(),
             flags=re.M,
@@ -447,7 +447,7 @@ def build_batch_tx(w3, cli, txs, key=KEYS["validator"]):
         "auth_info": {
             "signer_infos": [],
             "fee": {
-                "amount": [{"denom": "basetcro", "amount": str(fee)}],
+                "amount": [{"denom": "basebfh", "amount": str(fee)}],
                 "gas_limit": str(gas_limit),
                 "payer": "",
                 "granter": "",

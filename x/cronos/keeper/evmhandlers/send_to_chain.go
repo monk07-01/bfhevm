@@ -10,8 +10,8 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 
-	cronoskeeper "github.com/crypto-org-chain/cronos/x/cronos/keeper"
-	"github.com/crypto-org-chain/cronos/x/cronos/types"
+	cronoskeeper "github.com/monk07-01/bfhevm/x/cronos/keeper"
+	"github.com/monk07-01/bfhevm/x/cronos/types"
 )
 
 var _ types.EvmLogHandler = SendToChainHandler{}
@@ -115,7 +115,7 @@ func (h SendToChainHandler) Handle(
 		return fmt.Errorf("contract %s is not connected to native token", contract)
 	}
 
-	if !types.IsValidGravityDenom(denom) && !types.IsValidCronosDenom(denom) {
+	if !types.IsValidGravityDenom(denom) && !types.IsValidbfhevmdenom(denom) {
 		return fmt.Errorf("the native token associated with the contract %s is neither a gravity voucher or a cronos token", contract)
 	}
 

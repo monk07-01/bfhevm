@@ -76,7 +76,7 @@ build_tags_comma_sep := $(subst $(whitespace),$(comma),$(build_tags))
 
 # process linker flags
 ldflags += -X github.com/cosmos/cosmos-sdk/version.Name=cronos \
-	-X github.com/cosmos/cosmos-sdk/version.AppName=cronosd \
+	-X github.com/cosmos/cosmos-sdk/version.AppName=bfhevmd \
 	-X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
 	-X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
 	-X github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep)
@@ -85,10 +85,10 @@ BUILD_FLAGS := -tags "$(build_tags)" -ldflags '$(ldflags)'
 
 all: build
 build: check-network print-ledger go.sum
-	@go build -mod=readonly $(BUILD_FLAGS) -o $(BUILDDIR)/cronosd ./cmd/cronosd
+	@go build -mod=readonly $(BUILD_FLAGS) -o $(BUILDDIR)/bfhevmd ./cmd/bfhevmd
 
 install: check-network print-ledger go.sum
-	@go install -mod=readonly $(BUILD_FLAGS) ./cmd/cronosd
+	@go install -mod=readonly $(BUILD_FLAGS) ./cmd/bfhevmd
 
 test:
 	@go test -v -mod=readonly $(PACKAGES) -coverprofile=$(COVERAGE) -covermode=atomic
@@ -122,7 +122,7 @@ lint-nix:
 ###                                Releasing                                ###
 ###############################################################################
 
-PACKAGE_NAME:=github.com/crypto-org-chain/cronos
+PACKAGE_NAME:=github.com/monk07-01/bfhevm
 GOLANG_CROSS_VERSION  = v1.18
 release-dry-run:
 	docker run \
@@ -158,7 +158,7 @@ release:
 ###                                Sim Test                                 ###
 ###############################################################################
 
-SIMAPP = github.com/crypto-org-chain/cronos/app
+SIMAPP = github.com/monk07-01/bfhevm/app
 
 # Install the runsim binary with a temporary workaround of entering an outside
 # directory as the "go get" command ignores the -mod option and will polute the
@@ -190,8 +190,8 @@ test-sim-after-import: runsim
 
 test-sim-custom-genesis-multi-seed: runsim
 	@echo "Running multi-seed custom genesis simulation..."
-	@echo "By default, ${HOME}/.cronosd/config/genesis.json will be used."
-	@$(BINDIR)/runsim -Genesis=${HOME}/.cronosd/config/genesis.json -SimAppPkg=$(SIMAPP) -ExitOnFail 400 5 TestFullAppSimulation
+	@echo "By default, ${HOME}/.bfhevmd/config/genesis.json will be used."
+	@$(BINDIR)/runsim -Genesis=${HOME}/.bfhevmd/config/genesis.json -SimAppPkg=$(SIMAPP) -ExitOnFail 400 5 TestFullAppSimulation
 
 test-sim-multi-seed-long: runsim
 	@echo "Running long multi-seed application simulation. This may take awhile!"
@@ -273,7 +273,7 @@ endif
 ###                                Protobuf                                 ###
 ###############################################################################
 
-HTTPS_GIT := https://github.com/crypto-org-chain/cronos.git
+HTTPS_GIT := https://github.com/monk07-01/bfhevm.git
 DOCKER := $(shell which docker)
 DOCKER_BUF := $(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace bufbuild/buf
 

@@ -11,7 +11,7 @@ import (
 	"time"
 
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
-	"github.com/crypto-org-chain/cronos/x/cronos"
+	"github.com/monk07-01/bfhevm/x/cronos"
 
 	"github.com/stretchr/testify/require"
 	abci "github.com/tendermint/tendermint/abci/types"
@@ -35,12 +35,12 @@ import (
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
-	cronostypes "github.com/crypto-org-chain/cronos/x/cronos/types"
+	cronostypes "github.com/monk07-01/bfhevm/x/cronos/types"
 )
 
 const (
 	SimAppChainID  = "simulation_777-1"
-	TestAppChainID = "cronos_777-1"
+	TestAppChainID = "bfhevm_777-1"
 )
 
 // DefaultConsensusParams defines the default Tendermint consensus params used in

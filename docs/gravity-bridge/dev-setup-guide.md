@@ -5,7 +5,7 @@
 ### Binaries
 
 - `geth`, the go-ethereum binary.
-- `cronosd`, the cronos node binary.
+- `bfhevmd`, the cronos node binary.
 - `gorc`, the gravity bridge orchestrator cli, built from the [crypto-org fork](https://github.com/crypto-org-chain/gravity-bridge/tree/v2.0.0-cronos/orchestrator/gorc).
 - `pystarport`, a tool to run local cosmos devnet.
 - `start-geth`/`start-cronos`, convenient scripts to start the local devnets.
@@ -44,17 +44,17 @@ keystore = "/tmp/keystore"
 
 [gravity]
 contract = "0x0000000000000000000000000000000000000000" # TO BE UPDATED - gravity contract address on Ethereum network
-fees_denom = "basetcro"
+fees_denom = "basebfh"
 
 [ethereum]
 key_derivation_path = "m/44'/60'/0'/0/0"
 rpc = "http://localhost:8545" # TO BE UPDATED - EVM RPC of Ethereum node
 
 [cosmos]
-gas_price = { amount = 5000000000000, denom = "basetcro" }
+gas_price = { amount = 5000000000000, denom = "basebfh" }
 grpc = "http://localhost:9090" # TO BE UPDATED - GRPC of Cronos node
 key_derivation_path = "m/44'/60'/0'/0/0"
-prefix = "tcrc"
+prefix = bfh
 
 [metrics]
 listen_addr = "127.0.0.1:3000"
@@ -136,7 +136,7 @@ At last, send the orchestrator's ethereum address, cronos address, and the signa
 validator, the validator should send a `set-delegate-keys` transaction to cronos network to register the binding:
 
 ```shell
-$ cronosd tx gravity set-delegate-keys $val_address $orchestrator_cronos_address $orchestrator_eth_address $signature
+$ bfhevmd tx gravity set-delegate-keys $val_address $orchestrator_cronos_address $orchestrator_eth_address $signature
 ```
 
 ## Deploy Gravity Contract On Ethereum
@@ -146,10 +146,10 @@ orchestrator. And before deploy gravity contract, we need to prepare the [parame
 constructor](https://github.com/PeggyJV/gravity-bridge/blob/cfd55296dfb981dd7a18cefa2da9e21410fa0403/solidity/contracts/Gravity.sol#L561)
 first:
 
-- `gravity_id`. Run command `cronosd q gravity params | jq ".params.gravity_id"`
+- `gravity_id`. Run command `bfhevmd q gravity params | jq ".params.gravity_id"`
 - `threshold`, constant `2834678415`, which is just `int(2 ** 32 * 0.66)`.
 - `eth_addresses` and `powers`:
-  - Query signer set by running command: `cronosd q gravity latest-signer-set-tx | jq ".signer_set.signers"`
+  - Query signer set by running command: `bfhevmd q gravity latest-signer-set-tx | jq ".signer_set.signers"`
   - Sum up the `power` field to get `powers`
   - Collect the `ethereum_address` field into a list to get `eth_addresses`
 

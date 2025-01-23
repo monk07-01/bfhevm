@@ -9,7 +9,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 
-	"github.com/crypto-org-chain/cronos/x/cronos/types"
+	"github.com/monk07-01/bfhevm/x/cronos/types"
 )
 
 const (

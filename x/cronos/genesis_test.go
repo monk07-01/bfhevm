@@ -1,8 +1,8 @@
 package cronos_test
 
 import (
-	"github.com/crypto-org-chain/cronos/x/cronos"
-	"github.com/crypto-org-chain/cronos/x/cronos/types"
+	"github.com/monk07-01/bfhevm/x/cronos"
+	"github.com/monk07-01/bfhevm/x/cronos/types"
 )
 
 func (suite *CronosTestSuite) TestInitGenesis() {

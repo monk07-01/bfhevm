@@ -33,7 +33,7 @@ def prepare_network(tmp_path, file):
             hermes.configpath,
             "create",
             "channel",
-            "cronos_777-1",
+            "bfhevm_777-1",
             "chainmain-1",
             "--port-a",
             "transfer",
@@ -56,13 +56,13 @@ def assert_ready(ibc):
 
 def prepare(ibc):
     assert_ready(ibc)
-    # chainmain-1 -> cronos_777-1
+    # chainmain-1 -> bfhevm_777-1
     my_ibc0 = "chainmain-1"
-    my_ibc1 = "cronos_777-1"
+    my_ibc1 = "bfhevm_777-1"
     my_channel = "channel-0"
     dst_addr = eth_to_bech32(ADDRS["signer2"])
     src_amount = 10
-    src_denom = "basecro"
+    src_denom = "basebfh"
     # dstchainid srcchainid srcportid srchannelid
     cmd = (
         f"hermes -c {ibc.hermes.configpath} tx raw ft-transfer "

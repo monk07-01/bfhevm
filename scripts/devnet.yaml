@@ -1,6 +1,6 @@
 dotenv: .env
-cronos_777-1:
-  cmd: ./build/cronosd
+bfhevm_777-1:
+  cmd: ./build/bfhevmd
   start-flags: "--trace --unsafe-experimental"
   app-config:
     json-rpc:
@@ -8,18 +8,18 @@ cronos_777-1:
       ws-address: "0.0.0.0:{EVMRPC_PORT_WS}"
       api: "eth,net,web3,debug,cronos"
   validators:
-    - coins: 1000000000000000000stake,1000000000000000000basetcro
-      staked: 1000000000000000000stake
+    - coins: 1000000000000000000ubfh,1000000000000000000basebfh
+      staked: 1000000000000000000ubfh
       mnemonic: ${VALIDATOR1_MNEMONIC}
-    - coins: 1000000000000000000stake,1000000000000000000basetcro
-      staked: 1000000000000000000stake
+    - coins: 1000000000000000000ubfh,1000000000000000000basebfh
+      staked: 1000000000000000000ubfh
       mnemonic: ${VALIDATOR2_MNEMONIC}
   accounts:
     - name: community
-      coins: 10000000000000000000000basetcro
+      coins: 10000000000000000000000basebfh
       mnemonic: ${COMMUNITY_MNEMONIC}
   genesis:
     app_state:
       evm:
         params:
-          evm_denom: basetcro
+          evm_denom: basebfh

@@ -5,9 +5,9 @@ import (
 	"testing"
 	"time"
 
-	cronosmodulekeeper "github.com/crypto-org-chain/cronos/x/cronos/keeper"
-	keepertest "github.com/crypto-org-chain/cronos/x/cronos/keeper/mock"
-	"github.com/crypto-org-chain/cronos/x/cronos/types"
+	cronosmodulekeeper "github.com/monk07-01/bfhevm/x/cronos/keeper"
+	keepertest "github.com/monk07-01/bfhevm/x/cronos/keeper/mock"
+	"github.com/monk07-01/bfhevm/x/cronos/types"
 
 	evmtypes "github.com/evmos/ethermint/x/evm/types"
 
@@ -26,7 +26,7 @@ import (
 	tmversion "github.com/tendermint/tendermint/proto/tendermint/version"
 	"github.com/tendermint/tendermint/version"
 
-	"github.com/crypto-org-chain/cronos/app"
+	"github.com/monk07-01/bfhevm/app"
 )
 
 func TestKeeperTestSuite(t *testing.T) {

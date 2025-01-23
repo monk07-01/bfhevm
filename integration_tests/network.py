@@ -54,7 +54,7 @@ class Cronos:
         return "tcp://127.0.0.1:%d" % ports.rpc_port(self.base_port(i))
 
     def cosmos_cli(self, i=0):
-        return CosmosCLI(self.base_dir / f"node{i}", self.node_rpc(i), "cronosd")
+        return CosmosCLI(self.base_dir / f"node{i}", self.node_rpc(i), "bfhevmd")
 
     def use_websocket(self, use=True):
         self._w3 = None
@@ -171,7 +171,7 @@ def setup_custom_cronos(path, base_port, config, post_init=None, chain_binary=No
     try:
         wait_for_port(ports.evmrpc_port(base_port))
         wait_for_port(ports.evmrpc_ws_port(base_port))
-        yield Cronos(path / "cronos_777-1")
+        yield Cronos(path / "bfhevm_777-1")
     finally:
         os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
         # proc.terminate()

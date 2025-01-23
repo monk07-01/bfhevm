@@ -16,7 +16,7 @@ def ibc(request, tmp_path_factory):
 def test_ibc(ibc):
     src_amount = prepare(ibc)
     dst_amount = src_amount * RATIO  # the decimal places difference
-    dst_denom = "basetcro"
+    dst_denom = "basebfh"
     dst_addr = eth_to_bech32(ADDRS["signer2"])
     old_dst_balance = get_balance(ibc.cronos, dst_addr, dst_denom)
 
@@ -33,17 +33,17 @@ def test_ibc(ibc):
 
 def test_cronos_transfer_timeout(ibc):
     """
-    test sending basetcro from cronos to crypto-org-chain using cli transfer_tokens.
+    test sending basebfh from cronos to crypto-org-chain using cli transfer_tokens.
     depends on `test_ibc` to send the original coins.
     """
     assert_ready(ibc)
     dst_addr = ibc.chainmain.cosmos_cli().address("signer2")
     dst_amount = 2
-    dst_denom = "basecro"
+    dst_denom = "basebfh"
     cli = ibc.cronos.cosmos_cli()
     src_amount = dst_amount * RATIO  # the decimal places difference
     src_addr = cli.address("signer2")
-    src_denom = "basetcro"
+    src_denom = "basebfh"
 
     # case 1: use cronos cli
     old_src_balance = get_balance(ibc.cronos, src_addr, src_denom)

@@ -31,7 +31,7 @@ def get_balances(chain, addr):
 def test_ibc(ibc):
     src_amount = prepare(ibc)
     dst_amount = src_amount * RATIO  # the decimal places difference
-    dst_denom = "basetcro"
+    dst_denom = "basebfh"
     dst_addr = eth_to_bech32(ADDRS["signer2"])
     old_dst_balance = get_balance(ibc.cronos, dst_addr, dst_denom)
 
@@ -48,17 +48,17 @@ def test_ibc(ibc):
 
 def test_cronos_transfer_tokens(ibc):
     """
-    test sending basetcro from cronos to crypto-org-chain using cli transfer_tokens.
+    test sending basebfh from cronos to crypto-org-chain using cli transfer_tokens.
     depends on `test_ibc` to send the original coins.
     """
     assert_ready(ibc)
     dst_addr = ibc.chainmain.cosmos_cli().address("signer2")
     dst_amount = 2
-    dst_denom = "basecro"
+    dst_denom = "basebfh"
     cli = ibc.cronos.cosmos_cli()
     src_amount = dst_amount * RATIO  # the decimal places difference
     src_addr = cli.address("signer2")
-    src_denom = "basetcro"
+    src_denom = "basebfh"
 
     # case 1: use cronos cli
     old_src_balance = get_balance(ibc.cronos, src_addr, src_denom)
@@ -85,7 +85,7 @@ def test_cronos_transfer_tokens(ibc):
 
 def test_cronos_transfer_tokens_acknowledgement_error(ibc):
     """
-    test sending basetcro from cronos to crypto-org-chain using cli transfer_tokens
+    test sending basebfh from cronos to crypto-org-chain using cli transfer_tokens
     with invalid receiver for acknowledgement error.
     depends on `test_ibc` to send the original coins.
     """
@@ -95,7 +95,7 @@ def test_cronos_transfer_tokens_acknowledgement_error(ibc):
     cli = ibc.cronos.cosmos_cli()
     src_amount = dst_amount * RATIO  # the decimal places difference
     src_addr = cli.address("signer2")
-    src_denom = "basetcro"
+    src_denom = "basebfh"
 
     old_src_balance = get_balance(ibc.cronos, src_addr, src_denom)
     rsp = cli.transfer_tokens(
@@ -118,12 +118,12 @@ def test_cronos_transfer_tokens_acknowledgement_error(ibc):
 
 def test_cro_bridge_contract(ibc):
     """
-    test sending basetcro from cronos to crypto-org-chain using CroBridge contract.
+    test sending basebfh from cronos to crypto-org-chain using CroBridge contract.
     depends on `test_ibc` to send the original coins.
     """
     dst_addr = ibc.chainmain.cosmos_cli().address("signer2")
     dst_amount = 2
-    dst_denom = "basecro"
+    dst_denom = "basebfh"
     src_amount = dst_amount * RATIO  # the decimal places difference
     old_dst_balance = get_balance(ibc.chainmain, dst_addr, dst_denom)
 
@@ -154,7 +154,7 @@ def test_ica(ibc, tmp_path):
 
     print("register ica account")
     rsp = cli_controller.ica_register_account(
-        connid, from_="signer2", gas="400000", fees="100000000basetcro"
+        connid, from_="signer2", gas="400000", fees="100000000basebfh"
     )
     assert rsp["code"] == 0, rsp["raw_log"]
     port_id, channel_id = next(
@@ -193,12 +193,12 @@ def test_ica(ibc, tmp_path):
     assert cli_host.balance(ica_address) == 0
 
     # send some funds to interchain account
-    rsp = cli_host.transfer("signer2", ica_address, "1cro", gas_prices="1000000basecro")
+    rsp = cli_host.transfer("signer2", ica_address, "1cro", gas_prices="1000000basebfh")
     assert rsp["code"] == 0, rsp["raw_log"]
     wait_for_new_blocks(cli_host, 1)
 
     # check if the funds are received in interchain account
-    assert cli_host.balance(ica_address, denom="basecro") == 100000000
+    assert cli_host.balance(ica_address, denom="basebfh") == 100000000
 
     # generate a transaction to send to host chain
     generated_tx = tmp_path / "generated_tx.txt"
@@ -232,7 +232,7 @@ def test_ica(ibc, tmp_path):
     wait_for_fn("ica transfer tx", check_ica_tx)
 
     # check if the funds are reduced in interchain account
-    assert cli_host.balance(ica_address, denom="basecro") == 50000000
+    assert cli_host.balance(ica_address, denom="basebfh") == 50000000
 
 
 def test_cronos_transfer_source_tokens(ibc):
@@ -316,7 +316,7 @@ def test_cronos_transfer_source_tokens(ibc):
 
     coin = "1000" + dest_denom
     rsp = chainmain_cli.ibc_transfer(
-        chainmain_receiver, cronos_receiver, coin, "channel-0", 1, "100000000basecro"
+        chainmain_receiver, cronos_receiver, coin, "channel-0", 1, "100000000basebfh"
     )
     assert rsp["code"] == 0, rsp["raw_log"]
 

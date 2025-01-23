@@ -42,7 +42,7 @@ func Test_IsValidGravityDenom(t *testing.T) {
 	}
 }
 
-func Test_IsValidCronosDenom(t *testing.T) {
+func Test_IsValidbfhevmdenom(t *testing.T) {
 	tests := []struct {
 		name    string
 		denom   string
@@ -55,7 +55,7 @@ func Test_IsValidCronosDenom(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			require.Equal(t, tt.success, IsValidCronosDenom(tt.denom))
+			require.Equal(t, tt.success, IsValidbfhevmdenom(tt.denom))
 		})
 	}
 }

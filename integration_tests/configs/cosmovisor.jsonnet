@@ -1,9 +1,9 @@
 local config = import 'default.jsonnet';
 
 config {
-  'cronos_777-1'+: {
+  'bfhevm_777-1'+: {
     'app-config'+: {
-      'minimum-gas-prices': '5000000000000basetcro',
+      'minimum-gas-prices': '5000000000000basebfh',
     },
     genesis+: {
       app_state+: {
