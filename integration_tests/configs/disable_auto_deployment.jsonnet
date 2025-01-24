@@ -19,7 +19,7 @@ config {
       app_state+: {
         cronos: {
           params: {
-            cronos_admin: 'crc12luku6uxehhak02py4rcz65zu0swh7wjsrw0pp',
+            cronos_admin: 'bfh1vkpj5u6xzwtz09a6s93x0qhwlsstsvkyeq3gha',
             enable_auto_deployment: false,
           },
         },

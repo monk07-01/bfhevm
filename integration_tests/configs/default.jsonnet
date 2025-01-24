@@ -16,12 +16,12 @@
       },
     },
     validators: [{
-      coins: '1000000000000000000stake,10000000000000000000000basebfh',
-      staked: '1000000000000000000stake',
+      coins: '1000000000000000000abfh,10000000000000000000000basebfh',
+      staked: '1000000000000000000abfh',
       mnemonic: '${VALIDATOR1_MNEMONIC}',
     }, {
-      coins: '1000000000000000000stake,10000000000000000000000basebfh',
-      staked: '1000000000000000000stake',
+      coins: '1000000000000000000abfh,10000000000000000000000basebfh',
+      staked: '1000000000000000000abfh',
       mnemonic: '${VALIDATOR2_MNEMONIC}',
     }],
     accounts: [{
