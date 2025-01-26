@@ -1,5 +1,5 @@
 syntax = "proto3";
-package cronos.icactl.v1;
+package icactl.v1;
 
 import "cosmos_proto/cosmos.proto";
 import "google/protobuf/any.proto";

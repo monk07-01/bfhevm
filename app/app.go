@@ -126,6 +126,9 @@ import (
 	icactlmodule "github.com/monk07-01/bfhevm/x/icactl"
 	icactlmodulekeeper "github.com/monk07-01/bfhevm/x/icactl/keeper"
 	icactlmoduletypes "github.com/monk07-01/bfhevm/x/icactl/types"
+	nft "github.com/monk07-01/bfhevm/x/tokenfactory"
+	nftkeeper "github.com/monk07-01/bfhevm/x/tokenfactory/keeper"
+	nfttypes "github.com/monk07-01/bfhevm/x/tokenfactory/types"
 
 	// unnamed import of statik for swagger UI support
 	_ "github.com/monk07-01/bfhevm/client/docs/statik"
@@ -199,6 +202,7 @@ var (
 		gravity.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 		cronos.AppModuleBasic{},
+		nft.AppModuleBasic{},
 	)
 
 	// module account permissions
@@ -214,6 +218,7 @@ var (
 		evmtypes.ModuleName:            {authtypes.Minter, authtypes.Burner}, // used for secure addition and subtraction of balance using module account
 		gravitytypes.ModuleName:        {authtypes.Minter, authtypes.Burner},
 		cronostypes.ModuleName:         {authtypes.Minter, authtypes.Burner},
+		nfttypes.ModuleName: 			{authtypes.Minter, authtypes.Burner},
 	}
 	// Module configurator
 
@@ -284,6 +289,8 @@ type App struct {
 
 	CronosKeeper cronoskeeper.Keeper
 
+	NFTKeeper    nftkeeper.Keeper
+
 	// the module manager
 	mm *module.Manager
 
@@ -325,7 +332,7 @@ func New(
 		// ethermint keys
 		evmtypes.StoreKey, feemarkettypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
-		cronostypes.StoreKey,
+		cronostypes.StoreKey, nfttypes.StoreKey,
 	}
 	if experimental {
 		storeKeys = append(storeKeys, gravitytypes.StoreKey)
@@ -462,6 +469,8 @@ func New(
 	)
 	cronosModule := cronos.NewAppModule(appCodec, app.CronosKeeper)
 
+	app.NFTKeeper = nftkeeper.NewKeeper(appCodec, keys[nfttypes.StoreKey])
+
 	// register the proposal types
 	govRouter := govtypes.NewRouter()
 	govRouter.AddRoute(govtypes.RouterKey, govtypes.ProposalHandler).
@@ -571,6 +580,7 @@ func New(
 		evm.NewAppModule(app.EvmKeeper, app.AccountKeeper),
 		feemarket.NewAppModule(app.FeeMarketKeeper),
 		cronosModule,
+		nft.NewAppModule(appCodec, app.NFTKeeper, app.AccountKeeper, app.BankKeeper),
 	}
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -597,6 +607,7 @@ func New(
 		vestingtypes.ModuleName,
 		feemarkettypes.ModuleName,
 		cronostypes.ModuleName,
+		nfttypes.ModuleName,
 	}
 	endBlockersOrder := []string{
 		crisistypes.ModuleName, govtypes.ModuleName, stakingtypes.ModuleName,
@@ -619,6 +630,7 @@ func New(
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
 		cronostypes.ModuleName,
+		nfttypes.ModuleName,
 	}
 	// NOTE: The genutils module must occur after staking so that pools are
 	// properly initialized with tokens from genesis accounts.
@@ -649,6 +661,7 @@ func New(
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
 		cronostypes.ModuleName,
+		nfttypes.ModuleName,
 	}
 
 	if experimental {
@@ -696,6 +709,7 @@ func New(
 		evm.NewAppModule(app.EvmKeeper, app.AccountKeeper),
 		feemarket.NewAppModule(app.FeeMarketKeeper),
 		cronos.NewAppModule(appCodec, app.CronosKeeper),
+		nft.NewAppModule(appCodec, app.NFTKeeper, app.AccountKeeper, app.BankKeeper),
 	)
 
 	app.sm.RegisterStoreDecoders()
@@ -935,6 +949,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	}
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 	paramsKeeper.Subspace(cronostypes.ModuleName)
+	paramsKeeper.Subspace(nfttypes.ModuleName)
 
 	return paramsKeeper
 }
@@ -953,3 +968,4 @@ func VerifyAddressFormat(bz []byte) error {
 
 	return nil
 }
+

@@ -1,5 +1,5 @@
 syntax = "proto3";
-package cronos.icactl.v1;
+package icactl.v1;
 
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
@@ -12,12 +12,12 @@ option go_package = "github.com/monk07-01/bfhevm/x/icactl/types";
 service Query {
   // Parameters queries the parameters of the module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/cronos/icactl/v1/params";
+    option (google.api.http).get = "/bfhevm/icactl/v1/params";
   }
 
   // InterchainAccountAddress queries the interchain account address for given `connectionId` and `owner`
   rpc InterchainAccountAddress(QueryInterchainAccountAddressRequest) returns (QueryInterchainAccountAddressResponse) {
-    option (google.api.http).get = "/cronos/icactl/v1/interchain_account_address/{connectionId}/{owner}";
+    option (google.api.http).get = "/bfhevm/icactl/v1/interchain_account_address/{connectionId}/{owner}";
   }
 }
 

@@ -33,26 +33,68 @@
     - [Msg](#cronos.Msg)
   
 - [icactl/v1/params.proto](#icactl/v1/params.proto)
-    - [Params](#cronos.icactl.v1.Params)
+    - [Params](#icactl.v1.Params)
   
 - [icactl/v1/genesis.proto](#icactl/v1/genesis.proto)
-    - [GenesisState](#cronos.icactl.v1.GenesisState)
+    - [GenesisState](#icactl.v1.GenesisState)
   
 - [icactl/v1/query.proto](#icactl/v1/query.proto)
-    - [QueryInterchainAccountAddressRequest](#cronos.icactl.v1.QueryInterchainAccountAddressRequest)
-    - [QueryInterchainAccountAddressResponse](#cronos.icactl.v1.QueryInterchainAccountAddressResponse)
-    - [QueryParamsRequest](#cronos.icactl.v1.QueryParamsRequest)
-    - [QueryParamsResponse](#cronos.icactl.v1.QueryParamsResponse)
+    - [QueryInterchainAccountAddressRequest](#icactl.v1.QueryInterchainAccountAddressRequest)
+    - [QueryInterchainAccountAddressResponse](#icactl.v1.QueryInterchainAccountAddressResponse)
+    - [QueryParamsRequest](#icactl.v1.QueryParamsRequest)
+    - [QueryParamsResponse](#icactl.v1.QueryParamsResponse)
   
-    - [Query](#cronos.icactl.v1.Query)
+    - [Query](#icactl.v1.Query)
   
 - [icactl/v1/tx.proto](#icactl/v1/tx.proto)
-    - [MsgRegisterAccount](#cronos.icactl.v1.MsgRegisterAccount)
-    - [MsgRegisterAccountResponse](#cronos.icactl.v1.MsgRegisterAccountResponse)
-    - [MsgSubmitTx](#cronos.icactl.v1.MsgSubmitTx)
-    - [MsgSubmitTxResponse](#cronos.icactl.v1.MsgSubmitTxResponse)
+    - [MsgRegisterAccount](#icactl.v1.MsgRegisterAccount)
+    - [MsgRegisterAccountResponse](#icactl.v1.MsgRegisterAccountResponse)
+    - [MsgSubmitTx](#icactl.v1.MsgSubmitTx)
+    - [MsgSubmitTxResponse](#icactl.v1.MsgSubmitTxResponse)
   
-    - [Msg](#cronos.icactl.v1.Msg)
+    - [Msg](#icactl.v1.Msg)
+  
+- [tokenfactory/v1/nft.proto](#tokenfactory/v1/nft.proto)
+    - [BaseNFT](#tokenfactory.v1.BaseNFT)
+    - [Collection](#tokenfactory.v1.Collection)
+    - [Denom](#tokenfactory.v1.Denom)
+    - [IDCollection](#tokenfactory.v1.IDCollection)
+    - [Owner](#tokenfactory.v1.Owner)
+  
+- [tokenfactory/v1/genesis.proto](#tokenfactory/v1/genesis.proto)
+    - [GenesisState](#tokenfactory.v1.GenesisState)
+  
+- [tokenfactory/v1/query.proto](#tokenfactory/v1/query.proto)
+    - [QueryCollectionRequest](#tokenfactory.v1.QueryCollectionRequest)
+    - [QueryCollectionResponse](#tokenfactory.v1.QueryCollectionResponse)
+    - [QueryDenomByNameRequest](#tokenfactory.v1.QueryDenomByNameRequest)
+    - [QueryDenomByNameResponse](#tokenfactory.v1.QueryDenomByNameResponse)
+    - [QueryDenomRequest](#tokenfactory.v1.QueryDenomRequest)
+    - [QueryDenomResponse](#tokenfactory.v1.QueryDenomResponse)
+    - [QueryDenomsRequest](#tokenfactory.v1.QueryDenomsRequest)
+    - [QueryDenomsResponse](#tokenfactory.v1.QueryDenomsResponse)
+    - [QueryNFTRequest](#tokenfactory.v1.QueryNFTRequest)
+    - [QueryNFTResponse](#tokenfactory.v1.QueryNFTResponse)
+    - [QueryOwnerRequest](#tokenfactory.v1.QueryOwnerRequest)
+    - [QueryOwnerResponse](#tokenfactory.v1.QueryOwnerResponse)
+    - [QuerySupplyRequest](#tokenfactory.v1.QuerySupplyRequest)
+    - [QuerySupplyResponse](#tokenfactory.v1.QuerySupplyResponse)
+  
+    - [Query](#tokenfactory.v1.Query)
+  
+- [tokenfactory/v1/tx.proto](#tokenfactory/v1/tx.proto)
+    - [MsgBurnNFT](#tokenfactory.v1.MsgBurnNFT)
+    - [MsgBurnNFTResponse](#tokenfactory.v1.MsgBurnNFTResponse)
+    - [MsgEditNFT](#tokenfactory.v1.MsgEditNFT)
+    - [MsgEditNFTResponse](#tokenfactory.v1.MsgEditNFTResponse)
+    - [MsgIssueDenom](#tokenfactory.v1.MsgIssueDenom)
+    - [MsgIssueDenomResponse](#tokenfactory.v1.MsgIssueDenomResponse)
+    - [MsgMintNFT](#tokenfactory.v1.MsgMintNFT)
+    - [MsgMintNFTResponse](#tokenfactory.v1.MsgMintNFTResponse)
+    - [MsgTransferNFT](#tokenfactory.v1.MsgTransferNFT)
+    - [MsgTransferNFTResponse](#tokenfactory.v1.MsgTransferNFTResponse)
+  
+    - [Msg](#tokenfactory.v1.Msg)
   
 - [Scalar Value Types](#scalar-value-types)
 
@@ -383,6 +425,8 @@ MsgUpdateTokenMappingResponse defines the response type
 ### Msg
 Msg defines the Cronos Msg service
 
+this line is used by starport scaffolding # proto/tx/rpc
+
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
 | `ConvertVouchers` | [MsgConvertVouchers](#cronos.MsgConvertVouchers) | [MsgConvertVouchersResponse](#cronos.MsgConvertVouchersResponse) | ConvertVouchers defines a method for converting ibc voucher to cronos evm coins. | |
@@ -400,7 +444,7 @@ Msg defines the Cronos Msg service
 
 
 
-<a name="cronos.icactl.v1.Params"></a>
+<a name="icactl.v1.Params"></a>
 
 ### Params
 Params defines the parameters for the module.
@@ -431,7 +475,7 @@ Params defines the parameters for the module.
 
 
 
-<a name="cronos.icactl.v1.GenesisState"></a>
+<a name="icactl.v1.GenesisState"></a>
 
 ### GenesisState
 GenesisState defines the icactl module's genesis state.
@@ -439,7 +483,7 @@ GenesisState defines the icactl module's genesis state.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `params` | [Params](#cronos.icactl.v1.Params) |  | params defines the genesis parameters |
+| `params` | [Params](#icactl.v1.Params) |  | params defines the genesis parameters |
 
 
 
@@ -462,7 +506,7 @@ GenesisState defines the icactl module's genesis state.
 
 
 
-<a name="cronos.icactl.v1.QueryInterchainAccountAddressRequest"></a>
+<a name="icactl.v1.QueryInterchainAccountAddressRequest"></a>
 
 ### QueryInterchainAccountAddressRequest
 QueryInterchainAccountAddressRequest defines the request for the InterchainAccountAddress query.
@@ -478,7 +522,7 @@ QueryInterchainAccountAddressRequest defines the request for the InterchainAccou
 
 
 
-<a name="cronos.icactl.v1.QueryInterchainAccountAddressResponse"></a>
+<a name="icactl.v1.QueryInterchainAccountAddressResponse"></a>
 
 ### QueryInterchainAccountAddressResponse
 QueryInterchainAccountAddressResponse defines the response for the InterchainAccountAddress query.
@@ -493,7 +537,7 @@ QueryInterchainAccountAddressResponse defines the response for the InterchainAcc
 
 
 
-<a name="cronos.icactl.v1.QueryParamsRequest"></a>
+<a name="icactl.v1.QueryParamsRequest"></a>
 
 ### QueryParamsRequest
 QueryParamsRequest is request type for the Query/Params RPC method.
@@ -503,7 +547,7 @@ QueryParamsRequest is request type for the Query/Params RPC method.
 
 
 
-<a name="cronos.icactl.v1.QueryParamsResponse"></a>
+<a name="icactl.v1.QueryParamsResponse"></a>
 
 ### QueryParamsResponse
 QueryParamsResponse is response type for the Query/Params RPC method.
@@ -511,7 +555,7 @@ QueryParamsResponse is response type for the Query/Params RPC method.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `params` | [Params](#cronos.icactl.v1.Params) |  | params holds all the parameters of this module. |
+| `params` | [Params](#icactl.v1.Params) |  | params holds all the parameters of this module. |
 
 
 
@@ -524,15 +568,15 @@ QueryParamsResponse is response type for the Query/Params RPC method.
  <!-- end HasExtensions -->
 
 
-<a name="cronos.icactl.v1.Query"></a>
+<a name="icactl.v1.Query"></a>
 
 ### Query
 Query defines the gRPC querier service.
 
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
-| `Params` | [QueryParamsRequest](#cronos.icactl.v1.QueryParamsRequest) | [QueryParamsResponse](#cronos.icactl.v1.QueryParamsResponse) | Parameters queries the parameters of the module. | GET|/cronos/icactl/v1/params|
-| `InterchainAccountAddress` | [QueryInterchainAccountAddressRequest](#cronos.icactl.v1.QueryInterchainAccountAddressRequest) | [QueryInterchainAccountAddressResponse](#cronos.icactl.v1.QueryInterchainAccountAddressResponse) | InterchainAccountAddress queries the interchain account address for given `connectionId` and `owner` | GET|/cronos/icactl/v1/interchain_account_address/{connectionId}/{owner}|
+| `Params` | [QueryParamsRequest](#icactl.v1.QueryParamsRequest) | [QueryParamsResponse](#icactl.v1.QueryParamsResponse) | Parameters queries the parameters of the module. | GET|/bfhevm/icactl/v1/params|
+| `InterchainAccountAddress` | [QueryInterchainAccountAddressRequest](#icactl.v1.QueryInterchainAccountAddressRequest) | [QueryInterchainAccountAddressResponse](#icactl.v1.QueryInterchainAccountAddressResponse) | InterchainAccountAddress queries the interchain account address for given `connectionId` and `owner` | GET|/bfhevm/icactl/v1/interchain_account_address/{connectionId}/{owner}|
 
  <!-- end services -->
 
@@ -545,7 +589,7 @@ Query defines the gRPC querier service.
 
 
 
-<a name="cronos.icactl.v1.MsgRegisterAccount"></a>
+<a name="icactl.v1.MsgRegisterAccount"></a>
 
 ### MsgRegisterAccount
 MsgRegisterAccount defines the request message for MsgRegisterAccount
@@ -561,7 +605,7 @@ MsgRegisterAccount defines the request message for MsgRegisterAccount
 
 
 
-<a name="cronos.icactl.v1.MsgRegisterAccountResponse"></a>
+<a name="icactl.v1.MsgRegisterAccountResponse"></a>
 
 ### MsgRegisterAccountResponse
 MsgRegisterAccountResponse defines the response message for MsgRegisterAccount
@@ -571,7 +615,7 @@ MsgRegisterAccountResponse defines the response message for MsgRegisterAccount
 
 
 
-<a name="cronos.icactl.v1.MsgSubmitTx"></a>
+<a name="icactl.v1.MsgSubmitTx"></a>
 
 ### MsgSubmitTx
 MsgSubmitTx defines the request message for MsgSubmitTx
@@ -589,7 +633,7 @@ MsgSubmitTx defines the request message for MsgSubmitTx
 
 
 
-<a name="cronos.icactl.v1.MsgSubmitTxResponse"></a>
+<a name="icactl.v1.MsgSubmitTxResponse"></a>
 
 ### MsgSubmitTxResponse
 MsgSubmitTxResponse defines the response message for MsgSubmitTx
@@ -605,15 +649,575 @@ MsgSubmitTxResponse defines the response message for MsgSubmitTx
  <!-- end HasExtensions -->
 
 
-<a name="cronos.icactl.v1.Msg"></a>
+<a name="icactl.v1.Msg"></a>
 
 ### Msg
 Msg defines the Msg service.
 
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
-| `RegisterAccount` | [MsgRegisterAccount](#cronos.icactl.v1.MsgRegisterAccount) | [MsgRegisterAccountResponse](#cronos.icactl.v1.MsgRegisterAccountResponse) | RegisterAccount registers an interchain account on host chain with given `connectionId` | |
-| `SubmitTx` | [MsgSubmitTx](#cronos.icactl.v1.MsgSubmitTx) | [MsgSubmitTxResponse](#cronos.icactl.v1.MsgSubmitTxResponse) | SubmitTx submits a transaction to the host chain on behalf of interchain account | |
+| `RegisterAccount` | [MsgRegisterAccount](#icactl.v1.MsgRegisterAccount) | [MsgRegisterAccountResponse](#icactl.v1.MsgRegisterAccountResponse) | RegisterAccount registers an interchain account on host chain with given `connectionId` | |
+| `SubmitTx` | [MsgSubmitTx](#icactl.v1.MsgSubmitTx) | [MsgSubmitTxResponse](#icactl.v1.MsgSubmitTxResponse) | SubmitTx submits a transaction to the host chain on behalf of interchain account | |
+
+ <!-- end services -->
+
+
+
+<a name="tokenfactory/v1/nft.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## tokenfactory/v1/nft.proto
+Copyright (c) 2016-2021 Shanghai Bianjie AI Technology Inc. (licensed under the Apache License, Version 2.0)
+Modifications Copyright (c) 2021, CRO Protocol Labs ("Crypto.org") (licensed under the Apache License, Version 2.0)
+
+
+<a name="tokenfactory.v1.BaseNFT"></a>
+
+### BaseNFT
+BaseNFT defines a non-fungible token
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `id` | [string](#string) |  |  |
+| `name` | [string](#string) |  |  |
+| `uri` | [string](#string) |  |  |
+| `data` | [string](#string) |  |  |
+| `owner` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="tokenfactory.v1.Collection"></a>
+
+### Collection
+Collection defines a type of collection
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `denom` | [Denom](#tokenfactory.v1.Denom) |  |  |
+| `nfts` | [BaseNFT](#tokenfactory.v1.BaseNFT) | repeated |  |
+
+
+
+
+
+
+<a name="tokenfactory.v1.Denom"></a>
+
+### Denom
+Denom defines a type of NFT
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `id` | [string](#string) |  |  |
+| `name` | [string](#string) |  |  |
+| `schema` | [string](#string) |  |  |
+| `creator` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="tokenfactory.v1.IDCollection"></a>
+
+### IDCollection
+IDCollection defines a type of collection with specified ID
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `denom_id` | [string](#string) |  |  |
+| `token_ids` | [string](#string) | repeated |  |
+
+
+
+
+
+
+<a name="tokenfactory.v1.Owner"></a>
+
+### Owner
+Owner defines a type of owner
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `address` | [string](#string) |  |  |
+| `id_collections` | [IDCollection](#tokenfactory.v1.IDCollection) | repeated |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="tokenfactory/v1/genesis.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## tokenfactory/v1/genesis.proto
+Copyright (c) 2016-2021 Shanghai Bianjie AI Technology Inc. (licensed under the Apache License, Version 2.0)
+Modifications Copyright (c) 2021, CRO Protocol Labs ("Crypto.org") (licensed under the Apache License, Version 2.0)
+
+
+<a name="tokenfactory.v1.GenesisState"></a>
+
+### GenesisState
+GenesisState defines the NFT module's genesis state
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `collections` | [Collection](#tokenfactory.v1.Collection) | repeated |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="tokenfactory/v1/query.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## tokenfactory/v1/query.proto
+Copyright (c) 2016-2021 Shanghai Bianjie AI Technology Inc. (licensed under the Apache License, Version 2.0)
+Modifications Copyright (c) 2021, CRO Protocol Labs ("Crypto.org") (licensed under the Apache License, Version 2.0)
+
+
+<a name="tokenfactory.v1.QueryCollectionRequest"></a>
+
+### QueryCollectionRequest
+QueryCollectionRequest is the request type for the Query/Collection RPC method
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `denom_id` | [string](#string) |  |  |
+| `pagination` | [cosmos.base.query.v1beta1.PageRequest](#cosmos.base.query.v1beta1.PageRequest) |  | pagination defines an optional pagination for the request. |
+
+
+
+
+
+
+<a name="tokenfactory.v1.QueryCollectionResponse"></a>
+
+### QueryCollectionResponse
+QueryCollectionResponse is the response type for the Query/Collection RPC method
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `collection` | [Collection](#tokenfactory.v1.Collection) |  |  |
+| `pagination` | [cosmos.base.query.v1beta1.PageResponse](#cosmos.base.query.v1beta1.PageResponse) |  |  |
+
+
+
+
+
+
+<a name="tokenfactory.v1.QueryDenomByNameRequest"></a>
+
+### QueryDenomByNameRequest
+QueryDenomByNameRequest is the request type for the Query/DenomByName RPC method
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `denom_name` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="tokenfactory.v1.QueryDenomByNameResponse"></a>
+
+### QueryDenomByNameResponse
+QueryDenomByNameResponse is the response type for the Query/DenomByName RPC method
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `denom` | [Denom](#tokenfactory.v1.Denom) |  |  |
+
+
+
+
+
+
+<a name="tokenfactory.v1.QueryDenomRequest"></a>
+
+### QueryDenomRequest
+QueryDenomRequest is the request type for the Query/Denom RPC method
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `denom_id` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="tokenfactory.v1.QueryDenomResponse"></a>
+
+### QueryDenomResponse
+QueryDenomResponse is the response type for the Query/Denom RPC method
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `denom` | [Denom](#tokenfactory.v1.Denom) |  |  |
+
+
+
+
+
+
+<a name="tokenfactory.v1.QueryDenomsRequest"></a>
+
+### QueryDenomsRequest
+QueryDenomsRequest is the request type for the Query/Denoms RPC method
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `pagination` | [cosmos.base.query.v1beta1.PageRequest](#cosmos.base.query.v1beta1.PageRequest) |  | pagination defines an optional pagination for the request. |
+
+
+
+
+
+
+<a name="tokenfactory.v1.QueryDenomsResponse"></a>
+
+### QueryDenomsResponse
+QueryDenomsResponse is the response type for the Query/Denoms RPC method
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `denoms` | [Denom](#tokenfactory.v1.Denom) | repeated |  |
+| `pagination` | [cosmos.base.query.v1beta1.PageResponse](#cosmos.base.query.v1beta1.PageResponse) |  |  |
+
+
+
+
+
+
+<a name="tokenfactory.v1.QueryNFTRequest"></a>
+
+### QueryNFTRequest
+QueryNFTRequest is the request type for the Query/NFT RPC method
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `denom_id` | [string](#string) |  |  |
+| `token_id` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="tokenfactory.v1.QueryNFTResponse"></a>
+
+### QueryNFTResponse
+QueryNFTResponse is the response type for the Query/NFT RPC method
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `nft` | [BaseNFT](#tokenfactory.v1.BaseNFT) |  |  |
+
+
+
+
+
+
+<a name="tokenfactory.v1.QueryOwnerRequest"></a>
+
+### QueryOwnerRequest
+QueryOwnerRequest is the request type for the Query/Owner RPC method
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `denom_id` | [string](#string) |  |  |
+| `owner` | [string](#string) |  |  |
+| `pagination` | [cosmos.base.query.v1beta1.PageRequest](#cosmos.base.query.v1beta1.PageRequest) |  | pagination defines an optional pagination for the request. |
+
+
+
+
+
+
+<a name="tokenfactory.v1.QueryOwnerResponse"></a>
+
+### QueryOwnerResponse
+QueryOwnerResponse is the response type for the Query/Owner RPC method
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `owner` | [Owner](#tokenfactory.v1.Owner) |  |  |
+| `pagination` | [cosmos.base.query.v1beta1.PageResponse](#cosmos.base.query.v1beta1.PageResponse) |  |  |
+
+
+
+
+
+
+<a name="tokenfactory.v1.QuerySupplyRequest"></a>
+
+### QuerySupplyRequest
+QuerySupplyRequest is the request type for the Query/HTLC RPC method
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `denom_id` | [string](#string) |  |  |
+| `owner` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="tokenfactory.v1.QuerySupplyResponse"></a>
+
+### QuerySupplyResponse
+QuerySupplyResponse is the response type for the Query/Supply RPC method
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `amount` | [uint64](#uint64) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+
+<a name="tokenfactory.v1.Query"></a>
+
+### Query
+Query defines the gRPC querier service for NFT module
+
+| Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
+| ----------- | ------------ | ------------- | ------------| ------- | -------- |
+| `Supply` | [QuerySupplyRequest](#tokenfactory.v1.QuerySupplyRequest) | [QuerySupplyResponse](#tokenfactory.v1.QuerySupplyResponse) | Supply queries the total supply of a given denom or owner | GET|/bfhevm/tokenfactory/collections/{denom_id}/supply|
+| `Owner` | [QueryOwnerRequest](#tokenfactory.v1.QueryOwnerRequest) | [QueryOwnerResponse](#tokenfactory.v1.QueryOwnerResponse) | Owner queries the NFTs of the specified owner | GET|/bfhevm/tokenfactory/nfts|
+| `Collection` | [QueryCollectionRequest](#tokenfactory.v1.QueryCollectionRequest) | [QueryCollectionResponse](#tokenfactory.v1.QueryCollectionResponse) | Collection queries the NFTs of the specified denom | GET|/bfhevm/tokenfactory/collections/{denom_id}|
+| `Denom` | [QueryDenomRequest](#tokenfactory.v1.QueryDenomRequest) | [QueryDenomResponse](#tokenfactory.v1.QueryDenomResponse) | Denom queries the definition of a given denom | GET|/bfhevm/tokenfactory/denoms/{denom_id}|
+| `DenomByName` | [QueryDenomByNameRequest](#tokenfactory.v1.QueryDenomByNameRequest) | [QueryDenomByNameResponse](#tokenfactory.v1.QueryDenomByNameResponse) | DenomByName queries the definition of a given denom by name | GET|/bfhevm/tokenfactory/denoms/name/{denom_name}|
+| `Denoms` | [QueryDenomsRequest](#tokenfactory.v1.QueryDenomsRequest) | [QueryDenomsResponse](#tokenfactory.v1.QueryDenomsResponse) | Denoms queries all the denoms | GET|/bfhevm/tokenfactory/denoms|
+| `NFT` | [QueryNFTRequest](#tokenfactory.v1.QueryNFTRequest) | [QueryNFTResponse](#tokenfactory.v1.QueryNFTResponse) | NFT queries the NFT for the given denom and token ID | GET|/bfhevm/tokenfactory/nfts/{denom_id}/{token_id}|
+
+ <!-- end services -->
+
+
+
+<a name="tokenfactory/v1/tx.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## tokenfactory/v1/tx.proto
+Copyright (c) 2016-2021 Shanghai Bianjie AI Technology Inc. (licensed under the Apache License, Version 2.0)
+Modifications Copyright (c) 2021, CRO Protocol Labs ("Crypto.org") (licensed under the Apache License, Version 2.0)
+
+
+<a name="tokenfactory.v1.MsgBurnNFT"></a>
+
+### MsgBurnNFT
+MsgBurnNFT defines an SDK message for burning a NFT.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `id` | [string](#string) |  |  |
+| `denom_id` | [string](#string) |  |  |
+| `sender` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="tokenfactory.v1.MsgBurnNFTResponse"></a>
+
+### MsgBurnNFTResponse
+MsgBurnNFTResponse defines the Msg/BurnNFT response type.
+
+
+
+
+
+
+<a name="tokenfactory.v1.MsgEditNFT"></a>
+
+### MsgEditNFT
+MsgEditNFT defines an SDK message for editing a nft.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `id` | [string](#string) |  |  |
+| `denom_id` | [string](#string) |  |  |
+| `name` | [string](#string) |  |  |
+| `uri` | [string](#string) |  |  |
+| `data` | [string](#string) |  |  |
+| `sender` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="tokenfactory.v1.MsgEditNFTResponse"></a>
+
+### MsgEditNFTResponse
+MsgEditNFTResponse defines the Msg/EditNFT response type.
+
+
+
+
+
+
+<a name="tokenfactory.v1.MsgIssueDenom"></a>
+
+### MsgIssueDenom
+MsgIssueDenom defines an SDK message for creating a new denom.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `id` | [string](#string) |  |  |
+| `name` | [string](#string) |  |  |
+| `schema` | [string](#string) |  |  |
+| `sender` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="tokenfactory.v1.MsgIssueDenomResponse"></a>
+
+### MsgIssueDenomResponse
+MsgIssueDenomResponse defines the Msg/IssueDenom response type.
+
+
+
+
+
+
+<a name="tokenfactory.v1.MsgMintNFT"></a>
+
+### MsgMintNFT
+MsgMintNFT defines an SDK message for creating a new NFT.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `id` | [string](#string) |  |  |
+| `denom_id` | [string](#string) |  |  |
+| `name` | [string](#string) |  |  |
+| `uri` | [string](#string) |  |  |
+| `data` | [string](#string) |  |  |
+| `sender` | [string](#string) |  |  |
+| `recipient` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="tokenfactory.v1.MsgMintNFTResponse"></a>
+
+### MsgMintNFTResponse
+MsgMintNFTResponse defines the Msg/MintNFT response type.
+
+
+
+
+
+
+<a name="tokenfactory.v1.MsgTransferNFT"></a>
+
+### MsgTransferNFT
+MsgTransferNFT defines an SDK message for transferring an NFT to recipient.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `id` | [string](#string) |  |  |
+| `denom_id` | [string](#string) |  |  |
+| `sender` | [string](#string) |  |  |
+| `recipient` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="tokenfactory.v1.MsgTransferNFTResponse"></a>
+
+### MsgTransferNFTResponse
+MsgTransferNFTResponse defines the Msg/TransferNFT response type.
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+
+<a name="tokenfactory.v1.Msg"></a>
+
+### Msg
+Msg defines the NFT Msg service.
+
+| Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
+| ----------- | ------------ | ------------- | ------------| ------- | -------- |
+| `IssueDenom` | [MsgIssueDenom](#tokenfactory.v1.MsgIssueDenom) | [MsgIssueDenomResponse](#tokenfactory.v1.MsgIssueDenomResponse) | IssueDenom defines a method for issue a denom. | |
+| `MintNFT` | [MsgMintNFT](#tokenfactory.v1.MsgMintNFT) | [MsgMintNFTResponse](#tokenfactory.v1.MsgMintNFTResponse) | MintNFT defines a method for mint a new nft | |
+| `EditNFT` | [MsgEditNFT](#tokenfactory.v1.MsgEditNFT) | [MsgEditNFTResponse](#tokenfactory.v1.MsgEditNFTResponse) | EditNFT defines a method for editing a nft. | |
+| `TransferNFT` | [MsgTransferNFT](#tokenfactory.v1.MsgTransferNFT) | [MsgTransferNFTResponse](#tokenfactory.v1.MsgTransferNFTResponse) | TransferNFT defines a method for transferring a nft. | |
+| `BurnNFT` | [MsgBurnNFT](#tokenfactory.v1.MsgBurnNFT) | [MsgBurnNFTResponse](#tokenfactory.v1.MsgBurnNFTResponse) | BurnNFT defines a method for burning a nft. | |
 
  <!-- end services -->
 

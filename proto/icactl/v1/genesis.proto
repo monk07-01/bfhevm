@@ -1,5 +1,5 @@
 syntax = "proto3";
-package cronos.icactl.v1;
+package icactl.v1;
 
 import "gogoproto/gogo.proto";
 import "icactl/v1/params.proto";
