@@ -41,7 +41,7 @@ bfhevm_777-1:
         params:
           cronos_admin: bfh1vkpj5u6xzwtz09a6s93x0qhwlsstsvkyeq3gha
           enable_auto_deployment: true
-          ibc_cro_denom: ibc/6411AE2ADA1E73DB59DB151A8988F9B7D5E7E233D8414DB6817F8F1A01611F86
+          # ibc_cro_denom: ibc/6411AE2ADA1E73DB59DB151A8988F9B7D5E7E233D8414DB6817F8F1A01611F86
       gov:
         voting_params:
           voting_period: "10s"

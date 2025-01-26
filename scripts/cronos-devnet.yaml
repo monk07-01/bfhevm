@@ -3,7 +3,7 @@ bfhevm_777-1:
   cmd: bfhevmd
   start-flags: "--trace"
   app-config:
-    minimum-gas-prices: 0bfh
+    minimum-gas-prices: 0abfh
     index-events:
       - ethereum_tx.ethereumTxHash
     json-rpc:
@@ -41,7 +41,7 @@ bfhevm_777-1:
         params:
           cronos_admin: ${CRONOS_ADMIN}
           enable_auto_deployment: true
-          ibc_cro_denom: ${IBC_CRO_DENOM}
+          # ibc_cro_denom: ${IBC_CRO_DENOM}
       gov:
         voting_params:
           voting_period: "10s"
