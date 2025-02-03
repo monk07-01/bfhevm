@@ -12,6 +12,8 @@ TESTNET_FLAGS ?=
 VERSION := $(shell echo $(shell git describe --tags 2>/dev/null ) | sed 's/^v//')
 COMMIT := $(shell git log -1 --format='%H')
 
+#export GO111MODULE = on
+
 # process build tags
 build_tags = netgo
 ifeq ($(NETWORK),mainnet)
@@ -75,7 +77,7 @@ comma := ,
 build_tags_comma_sep := $(subst $(whitespace),$(comma),$(build_tags))
 
 # process linker flags
-ldflags += -X github.com/cosmos/cosmos-sdk/version.Name=cronos \
+ldflags += -X github.com/cosmos/cosmos-sdk/version.Name=bfhevm \
 	-X github.com/cosmos/cosmos-sdk/version.AppName=bfhevmd \
 	-X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
 	-X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
@@ -232,6 +234,46 @@ test-sim-profile:
 		-Enabled=true -NumBlocks=$(SIM_NUM_BLOCKS) -BlockSize=$(SIM_BLOCK_SIZE) -Commit=$(SIM_COMMIT) -timeout 24h -cpuprofile cpu.out -memprofile mem.out
 
 .PHONY: test-sim-profile test-sim-benchmark
+
+
+###############################################################################
+###                                Localnet                                 ###
+###############################################################################
+
+build-docker-bfhevmdnode:
+	$(MAKE) -C check-networks/local
+
+# Run a 4-node testnet locally
+localnet-start: build-linux build-docker-bfhevmdnode localnet-stop
+	@if ! [ -f $(BUILDDIR)/node0/.bfhevmd/config/genesis.json ]; \
+	then docker run --rm -v $(BUILDDIR):/bfhevmd:Z monk07-01/bfhevmdnode testnet --v 4 -o . --starting-ip-address 192.168.10.2 $(TESTNET_FLAGS); \
+	fi
+	BUILDDIR=$(BUILDDIR) docker-compose up -d
+
+# Stop testnet
+localnet-stop:
+	docker-compose down
+	docker check-network prune -f
+
+# local build pystarport
+build-pystarport:
+	pip install ./bfh-pystarport
+
+# Run a local testnet by pystarport
+localnet-pystartport: build-pystarport
+	pystarport serve
+
+clean:
+	rm -rf $(BUILDDIR)/
+
+clean-docker-compose: localnet-stop
+	rm -rf $(BUILDDIR)/node* $(BUILDDIR)/gentxs
+
+create-systemd:
+	./networks/create-service.sh
+
+make-proto:
+	./makeproto.sh
 
 ###############################################################################
 ###                                Integration Test                         ###

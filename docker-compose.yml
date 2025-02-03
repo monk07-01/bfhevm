@@ -1,0 +1,73 @@
+version: "3"
+
+services:
+  bfhevmdnode0:
+    container_name: bfhevmdnode0
+    image: "bfhevmd/node"
+    ports:
+      - "26657:26657"
+      - "8545:8545"
+      - "8546:8546"
+      - "8125:8125"
+    environment:
+      - ID=0
+      - LOG=${LOG:-bfhevmd.log}
+    volumes:
+      - ./localnet-setup/node0/bfhevmd:/bfhevm:Z
+    networks:
+      - localnet
+    entrypoint: bfhevmd
+
+  bfhevmdnode1:
+    container_name: bfhevmdnode1
+    image: "bfhevmd/node"
+    ports:
+      - "26658:26657"
+      - "8555:8545"
+      - "8556:8546"
+      - "8126:8125"
+    environment:
+      - ID=1
+      - LOG=${LOG:-bfhevmd.log}
+    volumes:
+      - ./localnet-setup/node1/bfhevmd:/bfhevm:Z
+    networks:
+      - localnet
+    entrypoint: bfhevmd
+
+  bfhevmdnode2:
+    container_name: bfhevmdnode2
+    image: "bfhevmd/node"
+    environment:
+      - ID=2
+      - LOG=${LOG:-bfhevmd.log}
+    ports:
+      - "26659:26657"
+      - "8565:8545"
+      - "8566:8546"
+      - "8127:8125"
+    volumes:
+      - ./localnet-setup/node2/bfhevmd:/bfhevm:Z
+    networks:
+      - localnet
+    entrypoint: bfhevmd
+
+  bfhevmdnode3:
+    container_name: bfhevmdnode3
+    image: "ethermintd/node"
+    environment:
+      - ID=3
+      - LOG=${LOG:-ethermintd.log}
+    ports:
+      - "26660:26657"
+      - "8575:8545"
+      - "8576:8546"
+      - "8128:8125"
+    volumes:
+      - ./localnet-setup/node3/ethermintd:/ethermint:Z
+    networks:
+      - localnet
+    entrypoint: bfhevmd
+
+networks:
+  localnet:

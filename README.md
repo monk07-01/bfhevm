@@ -39,7 +39,7 @@ parent:
 
 ## 1. Description
 
-**Cronos** is the Crypto.org EVM chain that aims to massively scale the DeFi ecosystem.
+**BFHEVM** is the Benefit For Humanity EVM chain that aims to massively scale the DeFi ecosystem.
 
 <a id="contributing" />
 

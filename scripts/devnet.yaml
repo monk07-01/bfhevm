@@ -1,6 +1,6 @@
 dotenv: .env
 bfhevm_777-1:
-  cmd: ./build/bfhevmd
+  cmd: bfhevmd
   start-flags: "--trace --unsafe-experimental"
   app-config:
     json-rpc:
@@ -8,18 +8,18 @@ bfhevm_777-1:
       ws-address: "0.0.0.0:{EVMRPC_PORT_WS}"
       api: "eth,net,web3,debug,cronos"
   validators:
-    - coins: 1000000000000000000abfh,1000000000000000000basebfh
-      staked: 1000000000000000000abfh
+    - coins: 1000000000000000000stake,1000000000000000000basebfh
+      staked: 1000000000000000000stake
       mnemonic: ${VALIDATOR1_MNEMONIC}
-    - coins: 1000000000000000000abfh,1000000000000000000basebfh
-      staked: 1000000000000000000abfh
+    - coins: 1000000000000000000stake,1000000000000000000abfh
+      staked: 1000000000000000000stake
       mnemonic: ${VALIDATOR2_MNEMONIC}
   accounts:
     - name: community
-      coins: 10000000000000000000000basebfh
+      coins: 10000000000000000000000abfh
       mnemonic: ${COMMUNITY_MNEMONIC}
   genesis:
     app_state:
       evm:
         params:
-          evm_denom: basebfh
+          evm_denom: abfh
