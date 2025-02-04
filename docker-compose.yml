@@ -54,17 +54,17 @@ services:
 
   bfhevmdnode3:
     container_name: bfhevmdnode3
-    image: "ethermintd/node"
+    image: "bfhevmd/node"
     environment:
       - ID=3
-      - LOG=${LOG:-ethermintd.log}
+      - LOG=${LOG:-bfhevmd.log}
     ports:
       - "26660:26657"
       - "8575:8545"
       - "8576:8546"
       - "8128:8125"
     volumes:
-      - ./localnet-setup/node3/ethermintd:/ethermint:Z
+      - ./localnet-setup/node3/bfhevmd:/bfhevm:Z
     networks:
       - localnet
     entrypoint: bfhevmd
