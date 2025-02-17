@@ -3,12 +3,13 @@ version: "3"
 services:
   bfhevmdnode0:
     container_name: bfhevmdnode0
-    image: "bfhevmd/node"
+    image: "bfhmonk/bfhevm:latest"
     ports:
+      - "26660:26660"
       - "26657:26657"
       - "8545:8545"
       - "8546:8546"
-      - "8125:8125"
+      - "9091:9091"
     environment:
       - ID=0
       - LOG=${LOG:-bfhevmd.log}
@@ -16,16 +17,17 @@ services:
       - ./localnet-setup/node0/bfhevmd:/bfhevm:Z
     networks:
       - localnet
-    entrypoint: bfhevmd
+    entrypoint: /usr/bin/bfhevmd
 
   bfhevmdnode1:
     container_name: bfhevmdnode1
-    image: "bfhevmd/node"
+    image: "bfhmonk/bfhevm:latest"
     ports:
+      - "26670:26660"
       - "26658:26657"
       - "8555:8545"
       - "8556:8546"
-      - "8126:8125"
+      - "9094:9091"
     environment:
       - ID=1
       - LOG=${LOG:-bfhevmd.log}
@@ -33,41 +35,43 @@ services:
       - ./localnet-setup/node1/bfhevmd:/bfhevm:Z
     networks:
       - localnet
-    entrypoint: bfhevmd
+    entrypoint: /usr/bin/bfhevmd
 
   bfhevmdnode2:
     container_name: bfhevmdnode2
-    image: "bfhevmd/node"
+    image: "bfhmonk/bfhevm:latest"
     environment:
       - ID=2
       - LOG=${LOG:-bfhevmd.log}
     ports:
+      - "26680:26660"
       - "26659:26657"
       - "8565:8545"
       - "8566:8546"
-      - "8127:8125"
+      - "9095:9091"
     volumes:
       - ./localnet-setup/node2/bfhevmd:/bfhevm:Z
     networks:
       - localnet
-    entrypoint: bfhevmd
+    entrypoint: /usr/bin/bfhevmd
 
   bfhevmdnode3:
     container_name: bfhevmdnode3
-    image: "bfhevmd/node"
+    image: "bfhmonk/bfhevm:latest"
     environment:
       - ID=3
       - LOG=${LOG:-bfhevmd.log}
     ports:
-      - "26660:26657"
+      - "26690:26660"
+      - "26661:26657"
       - "8575:8545"
       - "8576:8546"
-      - "8128:8125"
+      - "9096:9091"
     volumes:
       - ./localnet-setup/node3/bfhevmd:/bfhevm:Z
     networks:
       - localnet
-    entrypoint: bfhevmd
+    entrypoint: /usr/bin/bfhevmd
 
 networks:
   localnet:

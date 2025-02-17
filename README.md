@@ -5,7 +5,7 @@ parent:
 
 
 <div align="center">
-  <h1> <img src="./assets/cronos.svg" alt="Cronos Logo" width="300px" /> </h1>
+  <h1> <img src="./assets/coin.png" alt="BFH Logo" width="300px" /> </h1>
 </div>
 <br />
 
@@ -66,14 +66,14 @@ and the [contributing guidelines](CONTRIBUTING.md) when submitting code.
 
 ```bash
 # COSMOS_BUILD_OPTIONS=rocksdb make install
-make build
+make install
 ```
 
 <a id="start-local-full-node" />
 
 ## 6. Start a local Development Network and Node
 
-Please follow this [documentation](https://cronos.org/docs/getting-started/local-devnet.html#devnet-running-latest-development-node) to run a local devnet.
+run ./testnet.sh to run a local devnet.
 
 <a id="send-first-transaction" />
 

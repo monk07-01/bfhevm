@@ -28,7 +28,7 @@ bfhevmd keys add $KEY --keyring-backend $KEYRING --algo $KEYALGO
 bfhevmd init $MONIKER --chain-id $CHAINID
 
 # Change parameter token denominations to abfh
-perl -i -pe 's/^minimum-gas-prices = ".*?"/minimum-gas-prices = "0.01abfh"/' ~/.bfhevm/config/app.toml
+perl -i -pe 's/^minimum-gas-prices = ".*?"/minimum-gas-prices = "0.0001abfh"/' ~/.bfhevm/config/app.toml
 cat $HOME/.bfhevm/config/genesis.json | jq '.app_state["staking"]["params"]["bond_denom"]="abfh"' > $HOME/.bfhevm/config/tmp_genesis.json && mv $HOME/.bfhevm/config/tmp_genesis.json $HOME/.bfhevm/config/genesis.json
 cat $HOME/.bfhevm/config/genesis.json | jq '.app_state["crisis"]["constant_fee"]["denom"]="abfh"' > $HOME/.bfhevm/config/tmp_genesis.json && mv $HOME/.bfhevm/config/tmp_genesis.json $HOME/.bfhevm/config/genesis.json
 cat $HOME/.bfhevm/config/genesis.json | jq '.app_state["gov"]["deposit_params"]["min_deposit"][0]["denom"]="abfh"' > $HOME/.bfhevm/config/tmp_genesis.json && mv $HOME/.bfhevm/config/tmp_genesis.json $HOME/.bfhevm/config/genesis.json
