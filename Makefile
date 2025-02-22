@@ -1,18 +1,42 @@
-BUILDDIR ?= $(CURDIR)/build
+#!/usr/bin/make -f
+
 PACKAGES=$(shell go list ./... | grep -v '/simulation')
+VERSION := $(shell echo $(shell git describe --tags 2>/dev/null ) | sed 's/^v//')
+COMMIT := $(shell git log -1 --format='%H')
+LEDGER_ENABLED ?= true
+HTTPS_GIT := https://github.com/monk07-01/bfhevm.git
+BUILDDIR ?= $(CURDIR)/build
 COVERAGE ?= coverage.txt
 
 GOPATH ?= $(shell $(GO) env GOPATH)
 BINDIR ?= ~/go/bin
+BFHEVM_BINARY = bfhevmd
+BFHEVM_DIR = bfhevm
 NETWORK ?= mainnet
-LEDGER_ENABLED ?= true
+
+DOCKER := $(shell which docker)
+DOCKER_BUILDKIT=1
+DOCKER_ARGS=
+ifdef GITHUB_TOKEN
+	ifneq ($(strip $(GITHUB_TOKEN)),)
+		DOCKER_ARGS += --secret id=GITHUB_TOKEN
+	endif
+endif
+
+NAMESPACE := monk07-01
+PROJECT := bfhevm
+DOCKER_IMAGE := $(PROJECT)/node
+COMMIT_HASH := $(shell git rev-parse --short=7 HEAD)
+DOCKER_TAG := $(COMMIT_HASH)
 
 TESTNET_FLAGS ?=
 
-VERSION := $(shell echo $(shell git describe --tags 2>/dev/null ) | sed 's/^v//')
-COMMIT := $(shell git log -1 --format='%H')
+export GO111MODULE = on
 
-#export GO111MODULE = on
+default_target: all
+
+.PHONY: default_target
+
 
 # process build tags
 build_tags = netgo
@@ -78,27 +102,80 @@ build_tags_comma_sep := $(subst $(whitespace),$(comma),$(build_tags))
 
 # process linker flags
 ldflags += -X github.com/cosmos/cosmos-sdk/version.Name=bfhevm \
-	-X github.com/cosmos/cosmos-sdk/version.AppName=bfhevmd \
-	-X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
-	-X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
-	-X github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep)
+        -X github.com/cosmos/cosmos-sdk/version.AppName=bfhevmd \
+        -X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
+        -X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
+        -X github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep)
+
+ifeq (,$(findstring nostrip,$(COSMOS_BUILD_OPTIONS)))
+  ldflags += -w -s
+endif
+ldflags += $(LDFLAGS)
+ldflags := $(strip $(ldflags))
 
 BUILD_FLAGS := -tags "$(build_tags)" -ldflags '$(ldflags)'
+# check for nostrip option
+ifeq (,$(findstring nostrip,$(COSMOS_BUILD_OPTIONS)))
+  BUILD_FLAGS += -trimpath
+endif
 
-all: build
-build: check-network print-ledger go.sum
-	@go build -mod=readonly $(BUILD_FLAGS) -o $(BUILDDIR)/bfhevmd ./cmd/bfhevmd
+# check if no optimization option is passed
+# used for remote debugging
+ifneq (,$(findstring nooptimization,$(COSMOS_BUILD_OPTIONS)))
+  BUILD_FLAGS += -gcflags "all=-N -l"
+endif
 
-install: check-network print-ledger go.sum
-	@go install -mod=readonly $(BUILD_FLAGS) ./cmd/bfhevmd
+# # The below include contains the tools and runsim targets.
+# include contrib/devtools/Makefile
 
-test:
-	@go test -v -mod=readonly $(PACKAGES) -coverprofile=$(COVERAGE) -covermode=atomic
 
-.PHONY: clean build install test
+###############################################################################
+###                                Build                                    ###
+###############################################################################
+
+BUILD_TARGETS := build install
+
+build: BUILD_ARGS=-o $(BUILDDIR)/
+
+build-linux:
+	GOOS=linux GOARCH=arm64 LEDGER_ENABLED=false $(MAKE) build
+
+$(BUILD_TARGETS): go.sum $(BUILDDIR)/
+	CGO_ENABLED="1" go $@ $(BUILD_FLAGS) $(BUILD_ARGS) ./...
+
+$(BUILDDIR)/:
+	mkdir -p $(BUILDDIR)/
+
+docker-build:
+	# TODO replace with kaniko
+	docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .
+	docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:latest
+	# docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:${COMMIT_HASH}
+	# update old container
+	docker rm bfhevm || true
+	# create a new container from the latest image
+	docker create --name bfhevm -t -i bfhevm/node:latest bfhevm
+	# move the binaries to the ./build directory
+	mkdir -p ./build/
+	docker cp bfhevm:/usr/bin/bfhevmd ./build/
+
+$(MOCKS_DIR):
+	mkdir -p $(MOCKS_DIR)
+
+distclean: clean tools-clean
 
 clean:
-	rm -rf $(BUILDDIR)/
+	rm -rf \
+    $(BUILDDIR)/ \
+    artifacts/ \
+    tmp-swagger-gen/
+
+all: build
+
+build-all: tools build lint test
+
+.PHONY: distclean clean build-all
+
 
 ###############################################################################
 ###                                Linting                                  ###
@@ -240,40 +317,54 @@ test-sim-profile:
 ###                                Localnet                                 ###
 ###############################################################################
 
-build-docker-bfhevmdnode:
-	$(MAKE) -C check-networks/local
+# Build image for a local testnet
+localnet-build:
+	@$(MAKE) -C networks/local
 
-# Run a 4-node testnet locally
-localnet-start: build-linux build-docker-bfhevmdnode localnet-stop
-	@if ! [ -f $(BUILDDIR)/node0/.bfhevmd/config/genesis.json ]; \
-	then docker run --rm -v $(BUILDDIR):/bfhevmd:Z monk07-01/bfhevmdnode testnet --v 4 -o . --starting-ip-address 192.168.10.2 $(TESTNET_FLAGS); \
-	fi
-	BUILDDIR=$(BUILDDIR) docker-compose up -d
+# Start a 4-node testnet locally
+localnet-start: localnet-stop
+ifeq ($(OS),Windows_NT)
+	mkdir localnet-setup &
+	@$(MAKE) localnet-build
+
+	IF not exist "build/node0/$(BFHEVM_BINARY)/config/genesis.json" docker run --rm -v $(CURDIR)/build\bfhevm\Z bfhev/node "./bfhevmd testnet --v 4 -o /bfhevm --keyring-backend=test --ip-addresses bfhevmnode0,bfhevmnode1,bfhevmnode2,bfhevmnode3"
+	docker-compose up -d
+else
+	mkdir -p localnet-setup
+	@$(MAKE) localnet-build
+
+	if ! [ -f localnet-setup/node0/$(BFHEVM_BINARY)/config/genesis.json ]; then docker run --rm -v $(CURDIR)/localnet-setup:/bfhevm:Z bfhevm/node "./bfhevmd testnet --v 4 -o /bfhevm --keyring-backend=test --ip-addresses bfhevmnode0,bfhevmnode1,bfhevmnode2,bfhevmnode3"; fi
+	docker-compose up -d
+endif
 
 # Stop testnet
 localnet-stop:
 	docker-compose down
-	docker check-network prune -f
 
-# local build pystarport
-build-pystarport:
-	pip install ./bfh-pystarport
+# Clean testnet
+localnet-clean:
+	docker-compose down
+	sudo rm -rf localnet-setup
+ # Reset testnet
+localnet-unsafe-reset:
+	docker-compose down
+ifeq ($(OS),Windows_NT)
+	@docker run --rm -v $(CURDIR)\localnet-setup\node0\bfhevmd:/bfhevm\Z bfhevm/node "./bfhevmd tendermint unsafe-reset-all --home=/bfhevm"
+	@docker run --rm -v $(CURDIR)\localnet-setup\node1\bfhevmd:/bfhevm\Z bfhevm/node "./bfhevmd tendermint unsafe-reset-all --home=/bfhevm"
+	@docker run --rm -v $(CURDIR)\localnet-setup\node2\bfhevmd:/bfhevm\Z bfhevm/node "./bfhevmd tendermint unsafe-reset-all --home=/bfhevm"
+	@docker run --rm -v $(CURDIR)\localnet-setup\node3\bfhevmd:/bfhevm\Z bfhevm/node "./bfhevmd tendermint unsafe-reset-all --home=/bfhevm"
+else
+	@docker run --rm -v $(CURDIR)/localnet-setup/node0/bfhevmd:/bfhevm:Z bfhevm/node "./bfhevmd tendermint unsafe-reset-all --home=/bfhevm"
+	@docker run --rm -v $(CURDIR)/localnet-setup/node1/bfhevmd:/bfhevm:Z bfhevm/node "./bfhevmd tendermint unsafe-reset-all --home=/bfhevm"
+	@docker run --rm -v $(CURDIR)/localnet-setup/node2/bfhevmd:/bfhevm:Z bfhevm/node "./bfhevmd tendermint unsafe-reset-all --home=/bfhevm"
+	@docker run --rm -v $(CURDIR)/localnet-setup/node3/bfhevmd:/bfhevm:Z bfhevm/node "./bfhevmd tendermint unsafe-reset-all --home=/bfhevm"
+endif
 
-# Run a local testnet by pystarport
-localnet-pystartport: build-pystarport
-	pystarport serve
+# Show stream of logs
+localnet-show-logstream:
+	docker-compose logs --tail=1000 -f
 
-clean:
-	rm -rf $(BUILDDIR)/
-
-clean-docker-compose: localnet-stop
-	rm -rf $(BUILDDIR)/node* $(BUILDDIR)/gentxs
-
-create-systemd:
-	./networks/create-service.sh
-
-make-proto:
-	./makeproto.sh
+.PHONY: build-docker-local-bfhevm localnet-start localnet-stop
 
 ###############################################################################
 ###                                Integration Test                         ###
@@ -381,3 +472,21 @@ proto-update-deps:
 	@curl -sSL $(TM_URL)/crypto/keys.proto > $(TM_CRYPTO_TYPES)/keys.proto
 
 .PHONY: proto-all proto-gen proto-format proto-lint proto-check-breaking proto-update-deps
+
+###############################################################################
+###                              Documentation                              ###
+###############################################################################
+
+update-swagger-docs: statik
+	$(BINDIR)/statik -src=client/docs/swagger-ui -dest=client/docs -f -m
+	@if [ -n "$(git status --porcelain)" ]; then \
+        echo "\033[91mSwagger docs are out of sync!!!\033[0m";\
+        exit 1;\
+    else \
+        echo "\033[92mSwagger docs are in sync\033[0m";\
+    fi
+.PHONY: update-swagger-docs
+
+godocs:
+	@echo "--> Wait a few seconds and visit http://localhost:6080/pkg/github.com/monk07-01/bfhevm"
+	godoc -http=:6080
