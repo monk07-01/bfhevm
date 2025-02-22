@@ -1,62 +1,47 @@
+FROM golang:1.18-alpine3.17 AS builder
 
-ARG GO_VERSION="1.18"
-ARG RUNNER_IMAGE="gcr.io/distroless/static-debian11"
-ARG BUILD_TAGS="netgo,ledger,muslc"
+WORKDIR /opt
 
+ENV PACKAGES git build-base linux-headers bash binutils-gold
 
-FROM golang:${GO_VERSION}-alpine3.20 AS build-env
-
-ARG NETWORK=testnet
-ARG BUILD_TAGS
-#Set Dependencies
-ENV PACKAGES curl make git libc-dev bash gcc linux-headers eudev-dev python3
-
-WORKDIR /osmosis
-COPY go.mod go.sum ./
-RUN --mount=type=cache,target=/root/.cache/go-build \
-    --mount=type=cache,target=/root/go/pkg/mod \
-    go mod download
-
-# Install dependencies
 RUN apk add --update $PACKAGES
-RUN apk add --no-cache \
-    ca-certificates \
-    build-base \
-    linux-headers
 
-# add source files
-COPY . .
+ENV COMMIT_HASH=tokenfactory-gravity-evm
 
-# Build osmosisd binary
-RUN --mount=type=cache,target=/root/.cache/go-build \
-    --mount=type=cache,target=/root/go/pkg/mod \
-    GOWORK=off go build \
-    -mod=readonly \
-    -tags "netgo,ledger,muslc" \
-    -ldflags \
-    "-X github.com/cosmos/cosmos-sdk/version.Name="bfhevm" \
-    -X github.com/cosmos/cosmos-sdk/version.AppName="bfhevmd" \
-    -X github.com/cosmos/cosmos-sdk/version.Version=${GIT_VERSION} \
-    -X github.com/cosmos/cosmos-sdk/version.Commit=${GIT_COMMIT} \
-    -X github.com/cosmos/cosmos-sdk/version.BuildTags=${BUILD_TAGS} \
-    -w -s -linkmode=external -extldflags '-Wl,-z,muldefs -static'" \
-    -trimpath \
-    -o /bfhevm/build/bfhevmd \
-    /bfhevm/cmd/bfhevmd/main.go
+RUN git clone https://github.com/monk07-01/bfhevm.git \
+    && cd bfhevm \
+    && git checkout ${COMMIT_HASH}
 
-RUN make install
 
-# Final image
-FROM ${RUNNER_IMAGE}
+WORKDIR /opt/bfhevm
 
-# Copy over binaries from the build-env
-COPY --from=build-env /bfhevm/build/bfhevmd /bin/bfhevmd
+RUN make build
 
-ENV HOME=/bfhevm
-WORKDIR $HOME
+#RUN go install github.com/MinseokOh/toml-cli@latest
 
-EXPOSE 26660 26657 9091 8545 8546
+FROM alpine:3.17
 
-# Run chain-maind by default, omit entrypoint to ease using container with chain-maincli
-ENTRYPOINT ["bfhevmd"]
+COPY --from=builder /opt/bfhevm/build/bfhevmd /usr/local/bin/
 
+RUN apk add --update bash vim ca-certificates \
+    && addgroup -g 1000 bfhevm \
+    && adduser -S -h /home/bfhevm -D bfhevm -u 1000 -G bfhevm
+
+
+#COPY --from=build-env /go/src/github.com/monk07-01/bfhevm/build/bfhevmd /usr/bin/bfhevmd
+#COPY --from=build-env /go/bin/toml-cli /usr/bin/toml-cli
+
+
+# required for rocksdb build
+#COPY --from=build-env /target/usr/lib /usr/lib
+#COPY --from=build-env /target/usr/local/lib /usr/local/lib
+#COPY --from=build-env /target/usr/include /usr/include
+
+USER 1000
+
+WORKDIR /home/bfhevm
+
+EXPOSE 26656 26657 1317 9090 8545 8546
+HEALTHCHECK CMD curl --fail http://localhost:26657 || exit 1
+
+CMD ["bfhevmd", "start"]
