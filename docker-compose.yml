@@ -1,15 +1,16 @@
-version: "3"
+version: '3'
 
 services:
-  bfhevmdnode0:
-    container_name: bfhevmdnode0
-    image: "bfhmonk/bfhevm:latest"
+  node0:
+    container_name: bfhevmnode0
+    image: "bfhevm/node"
     ports:
-      - "26660:26660"
-      - "26657:26657"
-      - "8545:8545"
-      - "8546:8546"
-      - "9091:9091"
+      - "26651:26657"
+      - "8541:8545"
+      - "8551:8546"
+      - "1311:1317"
+      - "9050:9090"
+      - "26611:26656"
     environment:
       - ID=0
       - LOG=${LOG:-bfhevmd.log}
@@ -17,61 +18,66 @@ services:
       - ./localnet-setup/node0/bfhevmd:/bfhevm:Z
     networks:
       - localnet
-    entrypoint: /usr/bin/bfhevmd
+    entrypoint: "bash $HOME/bfhevm/start-docker.sh"
 
-  bfhevmdnode1:
-    container_name: bfhevmdnode1
-    image: "bfhmonk/bfhevm:latest"
+  node1:
+    container_name: bfhevmnode1
+    image: "bfhevm/node"
     ports:
-      - "26670:26660"
-      - "26658:26657"
-      - "8555:8545"
-      - "8556:8546"
-      - "9094:9091"
+      - "26652:26657"
+      - "8542:8545"
+      - "8552:8546"
+      - "1312:1317"
+      - "9060:9090"
+      - "26612:26656"
     environment:
-      - ID=1
+      - ID=0
       - LOG=${LOG:-bfhevmd.log}
     volumes:
       - ./localnet-setup/node1/bfhevmd:/bfhevm:Z
     networks:
       - localnet
-    entrypoint: /usr/bin/bfhevmd
+    entrypoint: "bash start-docker.sh"
 
-  bfhevmdnode2:
-    container_name: bfhevmdnode2
-    image: "bfhmonk/bfhevm:latest"
-    environment:
-      - ID=2
-      - LOG=${LOG:-bfhevmd.log}
+  node2:
+    container_name: bfhevmnode2
+    image: "bfhevm/node"
     ports:
-      - "26680:26660"
-      - "26659:26657"
-      - "8565:8545"
-      - "8566:8546"
-      - "9095:9091"
+      - "26653:26657"
+      - "8543:8545"
+      - "8553:8546"
+      - "1313:1317"
+      - "9070:9090"
+      - "26613:26656"
+    environment:
+      - ID=0
+      - LOG=${LOG:-bfhevmd.log}
     volumes:
       - ./localnet-setup/node2/bfhevmd:/bfhevm:Z
     networks:
       - localnet
-    entrypoint: /usr/bin/bfhevmd
+    entrypoint: "bash $HOME/bfhevm/start-docker.sh"
 
-  bfhevmdnode3:
-    container_name: bfhevmdnode3
-    image: "bfhmonk/bfhevm:latest"
-    environment:
-      - ID=3
-      - LOG=${LOG:-bfhevmd.log}
+
+    node3:
+    container_name: bfhevmnode3
+    image: "bfhevm/node"
     ports:
-      - "26690:26660"
-      - "26661:26657"
-      - "8575:8545"
-      - "8576:8546"
-      - "9096:9091"
+      - "26654:26657"
+      - "8544:8545"
+      - "8554:8546"
+      - "1314:1317"
+      - "9080:9090"
+      - "26614:26656"
+    environment:
+      - ID=0
+      - LOG=${LOG:-bfhevmd.log}
     volumes:
       - ./localnet-setup/node3/bfhevmd:/bfhevm:Z
     networks:
       - localnet
-    entrypoint: /usr/bin/bfhevmd
+    entrypoint: "bash $HOME/bfhevm/start-docker.sh"
 
 networks:
   localnet:
+
