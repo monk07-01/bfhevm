@@ -407,6 +407,366 @@ tmux new -s validator3 -d bfhevmd start --home=$HOME/.bfhevm/validator3
 tmux new -s validator4 -d bfhevmd start --home=$HOME/.bfhevm/validator4
 
 
+#!/bin/bash
+
+KEY1="validator1"
+KEY2="validator2"
+KEY3="validator3"
+KEY4="validator4"
+CHAINID="bfhevm_777-1"
+MONIKER="localtestnet"
+KEYRING="test"
+KEYALGO="eth_secp256k1"
+LOGLEVEL="info"
+# trace evm
+TRACE="--trace"
+# TRACE=""
+
+# validate dependencies are installed
+command -v jq > /dev/null 2>&1 || { echo >&2 "jq not installed. More info: https://stedolan.github.io/jq/download/"; exit 1; }
+
+# remove existing daemon and client
+rm -rf ~/.bfhevm*
+
+make install
+
+# make four osmosis directories
+mkdir $HOME/.bfhevm
+mkdir $HOME/.bfhevm/validator1
+mkdir $HOME/.bfhevm/validator2
+mkdir $HOME/.bfhevm/validator3
+mkdir $HOME/.bfhevm/validator4
+
+#bfhevmd config keyring-backend $KEYRING
+#bfhevmd config chain-id $CHAINID
+
+# init all four validators
+bfhevmd init $MONIKER --chain-id $CHAINID  --home=$HOME/.bfhevm/validator1
+bfhevmd init $MONIKER --chain-id $CHAINID  --home=$HOME/.bfhevm/validator2
+bfhevmd init $MONIKER --chain-id $CHAINID  --home=$HOME/.bfhevm/validator3
+bfhevmd init $MONIKER --chain-id $CHAINID  --home=$HOME/.bfhevm/validator4
+# create keys for all four validators
+bfhevmd keys add $KEY1 --keyring-backend $KEYRING --algo $KEYALGO --home=$HOME/.bfhevm/validator1
+bfhevmd keys add $KEY2 --keyring-backend $KEYRING --algo $KEYALGO --home=$HOME/.bfhevm/validator2
+bfhevmd keys add $KEY3 --keyring-backend $KEYRING --algo $KEYALGO --home=$HOME/.bfhevm/validator3
+bfhevmd keys add $KEY4 --keyring-backend $KEYRING --algo $KEYALGO --home=$HOME/.bfhevm/validator4
+
+# if $KEY exists it should be deleted
+#bfhevmd keys add $KEY --keyring-backend $KEYRING --algo $KEYALGO
+# Set moniker and chain-id for Ethermint (Moniker can be anything, chain-id must be an integer)
+#bfhevmd init $MONIKER --chain-id $CHAINID
+
+# Change parameter token denominations to abfh
+perl -i -pe 's/^minimum-gas-prices = ".*?"/minimum-gas-prices = "0.001abfh"/' ~/.bfhevm/validator1/config/app.toml
+cat $HOME/.bfhevm/validator1/config/genesis.json | jq '.app_state["staking"]["params"]["bond_denom"]="abfh"' > $HOME/.bfhevm/validator1/config/tmp_genesis.json && mv $HOME/.bfhevm/validator1/config/tmp_genesis.json $HOME/.bfhevm/validator1/>
+cat $HOME/.bfhevm/validator1/config/genesis.json | jq '.app_state["crisis"]["constant_fee"]["denom"]="abfh"' > $HOME/.bfhevm/validator1/config/tmp_genesis.json && mv $HOME/.bfhevm/validator1/config/tmp_genesis.json $HOME/.bfhevm/validator1/>
+cat $HOME/.bfhevm/validator1/config/genesis.json | jq '.app_state["gov"]["deposit_params"]["min_deposit"][0]["denom"]="abfh"' > $HOME/.bfhevm/validator1/config/tmp_genesis.json && mv $HOME/.bfhevm/validator1/config/tmp_genesis.json $HOME/.b>
+cat $HOME/.bfhevm/validator1/config/genesis.json | jq '.app_state["mint"]["params"]["mint_denom"]="abfh"' > $HOME/.bfhevm/validator1/config/tmp_genesis.json && mv $HOME/.bfhevm/validator1/config/tmp_genesis.json $HOME/.bfhevm/validator1/con>
+#sed -i -E 's|0.0.0.0:9090|0.0.0.0:9050|g' $HOME/.bfhevm/config/app.toml
+sed -i 's/stake/abfh/g' $HOME/.bfhevm/validator1/config/genesis.json
+sed -i 's/aphoton/abfh/g' $HOME/.bfhevm/validator1/config/genesis.json
+
+sed -i 's/prometheus = false/prometheus = true/g' $HOME/.bfhevm/validator1/config/config.toml
+sed -i 's/enable-indexer = false/enable-indexer = true/g' $HOME/.bfhevm/validator1/config/app.toml
+perl -i -0pe 's/# Enable defines if the API server should be enabled.\nenable = false/# Enable defines if the API server should be enabled.\nenable = true/' $HOME/.bfhevm/validator1/config/app.toml
+
+sed -i 's/timeout_commit = "5s"/timeout_commit = "3s"/g' "$CONFIG"
+# make sure the localhost IP is 0.0.0.0
+sed -i 's/pprof_laddr = "localhost:6060"/pprof_laddr = "0.0.0.0:6010"/g' $HOME/.bfhevm/validator1/config/config.toml
+sed -i 's/127.0.0.1/0.0.0.0/g' $HOME/.bfhevm/validator1/config/config.toml
+sed -i 's/localhost/0.0.0.0/g' $HOME/.bfhevm/validator1/config/client.toml
+# Set gas limit in genesis
+cat $HOME/.bfhevm/validator1/config/genesis.json | jq '.consensus_params["block"]["max_gas"]="20000000"' > $HOME/.bfhevm/validator1/config/tmp_genesis.json && mv $HOME/.bfhevm/validator1/config/tmp_genesis.json $HOME/.bfhevm/validator1/conf>
+
+# Allocate genesis accounts (cosmos formatted addresses)
+bfhevmd add-genesis-account $KEY1 100000000000000000000000000abfh --keyring-backend $KEYRING --home=$HOME/.bfhevm/validator1
+
+# Sign genesis transaction
+bfhevmd gentx $KEY1 10000000000000000abfh --keyring-backend $KEYRING --chain-id $CHAINID --home=$HOME/.bfhevm/validator1
+
+# Collect genesis tx
+bfhevmd collect-gentxs --home=$HOME/.bfhevm/validator1
+
+# Run this to ensure everything worked and that the genesis file is setup correctly
+bfhevmd validate-genesis --home=$HOME/.bfhevm/validator1
+
+# Change parameter token denominations to abfh
+perl -i -pe 's/^minimum-gas-prices = ".*?"/minimum-gas-prices = "0.001abfh"/' ~/.bfhevm/validator2/config/app.toml
+cat $HOME/.bfhevm/validator2/config/genesis.json | jq '.app_state["staking"]["params"]["bond_denom"]="abfh"' > $HOME/.bfhevm/validator2/config/tmp_genesis.json && mv $HOME/.bfhevm/validator2/config/tmp_genesis.json $HOME/.bfhevm/validator2/>
+cat $HOME/.bfhevm/validator2/config/genesis.json | jq '.app_state["crisis"]["constant_fee"]["denom"]="abfh"' > $HOME/.bfhevm/validator2/config/tmp_genesis.json && mv $HOME/.bfhevm/validator2/config/tmp_genesis.json $HOME/.bfhevm/validator2/>
+cat $HOME/.bfhevm/validator2/config/genesis.json | jq '.app_state["gov"]["deposit_params"]["min_deposit"][0]["denom"]="abfh"' > $HOME/.bfhevm/validator2/config/tmp_genesis.json && mv $HOME/.bfhevm/validator2/config/tmp_genesis.json $HOME/.b>
+cat $HOME/.bfhevm/validator2/config/genesis.json | jq '.app_state["mint"]["params"]["mint_denom"]="abfh"' > $HOME/.bfhevm/validator2/config/tmp_genesis.json && mv $HOME/.bfhevm/validator2/config/tmp_genesis.json $HOME/.bfhevm/validator2/con>
+#sed -i -E 's|0.0.0.0:9090|0.0.0.0:9050|g' $HOME/.bfhevm/config/app.toml
+sed -i 's/stake/abfh/g' $HOME/.bfhevm/validator2/config/genesis.json
+sed -i 's/aphoton/abfh/g' $HOME/.bfhevm/validator2/config/genesis.json
+
+sed -i 's/prometheus = false/prometheus = true/g' $HOME/.bfhevm/validator2/config/config.toml
+sed -i 's/enable-indexer = false/enable-indexer = true/g' $HOME/.bfhevm/validator2/config/app.toml
+perl -i -0pe 's/# Enable defines if the API server should be enabled.\nenable = false/# Enable defines if the API server should be enabled.\nenable = true/' $HOME/.bfhevm/validator2/config/app.toml
+
+sed -i 's/timeout_commit = "5s"/timeout_commit = "3s"/g' "$CONFIG"
+# make sure the localhost IP is 0.0.0.0
+sed -i 's/pprof_laddr = "localhost:6060"/pprof_laddr = "0.0.0.0:6020"/g' $HOME/.bfhevm/validator2/config/config.toml
+sed -i 's/127.0.0.1/0.0.0.0/g' $HOME/.bfhevm/validator2/config/config.toml
+sed -i 's/localhost/0.0.0.0/g' $HOME/.bfhevm/validator2/config/client.toml
+# Set gas limit in genesis
+cat $HOME/.bfhevm/validator2/config/genesis.json | jq '.consensus_params["block"]["max_gas"]="20000000"' > $HOME/.bfhevm/validator2/config/tmp_genesis.json && mv $HOME/.bfhevm/validator2/config/tmp_genesis.json $HOME/.bfhevm/validator2/conf>
+
+# Allocate genesis accounts (cosmos formatted addresses)
+#bfhevmd add-genesis-account $KEY2 100000000000000000000000000abfh --keyring-backend $KEYRING --home=$HOME/.bfhevm/validator2
+
+# Sign genesis transaction
+#bfhevmd gentx $KEY2 10000000000000000abfh --keyring-backend $KEYRING --chain-id $CHAINID --home=$HOME/.bfhevm/validator2
+
+# Collect genesis tx
+#bfhevmd collect-gentxs --home=$HOME/.bfhevm/validator2
+
+# Run this to ensure everything worked and that the genesis file is setup correctly
+#bfhevmd validate-genesis --home=$HOME/.bfhevm/validator2
+
+# Change parameter token denominations to abfh
+perl -i -pe 's/^minimum-gas-prices = ".*?"/minimum-gas-prices = "0.001abfh"/' ~/.bfhevm/validator3/config/app.toml
+cat $HOME/.bfhevm/validator3/config/genesis.json | jq '.app_state["staking"]["params"]["bond_denom"]="abfh"' > $HOME/.bfhevm/validator3/config/tmp_genesis.json && mv $HOME/.bfhevm/validator3/config/tmp_genesis.json $HOME/.bfhevm/validator3/>
+cat $HOME/.bfhevm/validator3/config/genesis.json | jq '.app_state["crisis"]["constant_fee"]["denom"]="abfh"' > $HOME/.bfhevm/validator3/config/tmp_genesis.json && mv $HOME/.bfhevm/validator3/config/tmp_genesis.json $HOME/.bfhevm/validator3/>
+cat $HOME/.bfhevm/validator3/config/genesis.json | jq '.app_state["gov"]["deposit_params"]["min_deposit"][0]["denom"]="abfh"' > $HOME/.bfhevm/validator3/config/tmp_genesis.json && mv $HOME/.bfhevm/validator3/config/tmp_genesis.json $HOME/.b>
+cat $HOME/.bfhevm/validator3/config/genesis.json | jq '.app_state["mint"]["params"]["mint_denom"]="abfh"' > $HOME/.bfhevm/validator3/config/tmp_genesis.json && mv $HOME/.bfhevm/validator3/config/tmp_genesis.json $HOME/.bfhevm/validator3/con>
+#sed -i -E 's|0.0.0.0:9090|0.0.0.0:9050|g' $HOME/.bfhevm/config/app.toml
+sed -i 's/stake/abfh/g' $HOME/.bfhevm/validator3/config/genesis.json
+sed -i 's/aphoton/abfh/g' $HOME/.bfhevm/validator3/config/genesis.json
+
+sed -i 's/prometheus = false/prometheus = true/g' $HOME/.bfhevm/validator3/config/config.toml
+sed -i 's/enable-indexer = false/enable-indexer = true/g' $HOME/.bfhevm/validator3/config/app.toml
+perl -i -0pe 's/# Enable defines if the API server should be enabled.\nenable = false/# Enable defines if the API server should be enabled.\nenable = true/' $HOME/.bfhevm/validator3/config/app.toml
+
+sed -i 's/timeout_commit = "5s"/timeout_commit = "3s"/g' "$CONFIG"
+# make sure the localhost IP is 0.0.0.0
+sed -i 's/pprof_laddr = "localhost:6060"/pprof_laddr = "0.0.0.0:6030"/g' $HOME/.bfhevm/validator3/config/config.toml
+sed -i 's/127.0.0.1/0.0.0.0/g' $HOME/.bfhevm/validator3/config/config.toml
+sed -i 's/localhost/0.0.0.0/g' $HOME/.bfhevm/validator3/config/client.toml
+# Set gas limit in genesis
+cat $HOME/.bfhevm/validator3/config/genesis.json | jq '.consensus_params["block"]["max_gas"]="20000000"' > $HOME/.bfhevm/validator3/config/tmp_genesis.json && mv $HOME/.bfhevm/validator3/config/tmp_genesis.json $HOME/.bfhevm/validator3/conf>
+
+# Allocate genesis accounts (cosmos formatted addresses)
+#bfhevmd add-genesis-account $KEY3 100000000000000000000000000abfh --keyring-backend $KEYRING --home=$HOME/.bfhevm/validator3
+
+# Sign genesis transaction
+#bfhevmd gentx $KEY3 10000000000000000abfh --keyring-backend $KEYRING --chain-id $CHAINID --home=$HOME/.bfhevm/validator3
+#bfhevmd collect-gentxs --home=$HOME/.bfhevm/validator3
+
+# Run this to ensure everything worked and that the genesis file is setup correctly
+#bfhevmd validate-genesis --home=$HOME/.bfhevm/validator3
+
+
+# Change parameter token denominations to abfh
+perl -i -pe 's/^minimum-gas-prices = ".*?"/minimum-gas-prices = "0.001abfh"/' ~/.bfhevm/validator3/config/app.toml
+cat $HOME/.bfhevm/validator4/config/genesis.json | jq '.app_state["staking"]["params"]["bond_denom"]="abfh"' > $HOME/.bfhevm/validator4/config/tmp_genesis.json && mv $HOME/.bfhevm/validator4/config/tmp_genesis.json $HOME/.bfhevm/validator4/>
+cat $HOME/.bfhevm/validator4/config/genesis.json | jq '.app_state["crisis"]["constant_fee"]["denom"]="abfh"' > $HOME/.bfhevm/validator4/config/tmp_genesis.json && mv $HOME/.bfhevm/validator4/config/tmp_genesis.json $HOME/.bfhevm/validator4/>
+cat $HOME/.bfhevm/validator4/config/genesis.json | jq '.app_state["gov"]["deposit_params"]["min_deposit"][0]["denom"]="abfh"' > $HOME/.bfhevm/validator4/config/tmp_genesis.json && mv $HOME/.bfhevm/validator4/config/tmp_genesis.json $HOME/.b>
+cat $HOME/.bfhevm/validator4/config/genesis.json | jq '.app_state["mint"]["params"]["mint_denom"]="abfh"' > $HOME/.bfhevm/validator4/config/tmp_genesis.json && mv $HOME/.bfhevm/validator4/config/tmp_genesis.json $HOME/.bfhevm/validator4/con>
+#sed -i -E 's|0.0.0.0:9090|0.0.0.0:9050|g' $HOME/.bfhevm/config/app.toml
+sed -i 's/stake/abfh/g' $HOME/.bfhevm/validator4/config/genesis.json
+sed -i 's/aphoton/abfh/g' $HOME/.bfhevm/validator4/config/genesis.json
+
+sed -i 's/prometheus = false/prometheus = true/g' $HOME/.bfhevm/validator4/config/config.toml
+sed -i 's/enable-indexer = false/enable-indexer = true/g' $HOME/.bfhevm/validator4/config/app.toml
+perl -i -0pe 's/# Enable defines if the API server should be enabled.\nenable = false/# Enable defines if the API server should be enabled.\nenable = true/' $HOME/.bfhevm/validator4/config/app.toml
+
+sed -i 's/timeout_commit = "5s"/timeout_commit = "3s"/g' "$CONFIG"
+# make sure the localhost IP is 0.0.0.0
+sed -i 's/pprof_laddr = "localhost:6060"/pprof_laddr = "0.0.0.0:6040"/g' $HOME/.bfhevm/validator4/config/config.toml
+sed -i 's/127.0.0.1/0.0.0.0/g' $HOME/.bfhevm/validator4/config/config.toml
+sed -i 's/localhost/0.0.0.0/g' $HOME/.bfhevm/validator4/config/client.toml
+# Set gas limit in genesis
+cat $HOME/.bfhevm/validator4/config/genesis.json | jq '.consensus_params["block"]["max_gas"]="20000000"' > $HOME/.bfhevm/validator4/config/tmp_genesis.json && mv $HOME/.bfhevm/validator4/config/tmp_genesis.json $HOME/.bfhevm/validator4/conf>
+
+# Allocate genesis accounts (cosmos formatted addresses)
+#bfhevmd add-genesis-account $KEY4 100000000000000000000000000abfh --keyring-backend $KEYRING --home=$HOME/.bfhevm/validator4
+
+# Sign genesis transaction
+#bfhevmd gentx $KEY4 10000000000000000abfh --keyring-backend $KEYRING --chain-id $CHAINID --home=$HOME/.bfhevm/validator4
+
+# Collect genesis tx
+#bfhevmd collect-gentxs --home=$HOME/.bfhevm/validator4
+
+# Run this to ensure everything worked and that the genesis file is setup correctly
+#bfhevmd validate-genesis --home=$HOME/.bfhevm/validator4
+
+
+# change app.toml values
+VALIDATOR1_APP_TOML=$HOME/.bfhevm/validator1/config/app.toml
+VALIDATOR2_APP_TOML=$HOME/.bfhevm/validator2/config/app.toml
+VALIDATOR3_APP_TOML=$HOME/.bfhevm/validator3/config/app.toml
+VALIDATOR4_APP_TOML=$HOME/.bfhevm/validator4/config/app.toml
+
+# validator1, need to change 9090 port as it conflicts with prometheus port
+sed -i -E 's|allow_duplicate_ip = false|allow_duplicate_ip = true|g' $VALIDATOR1_APP_TOML
+sed -i -E 's|0.0.0.0:9090|0.0.0.0:9050|g' $VALIDATOR1_APP_TOML
+#sed -i -E 's|0.0.0.0:8545|0.0.0.0:8505|g' $VALIDATOR1_APP_TOML
+#sed -i -E 's|0.0.0.0:8546|0.0.0.0:8596|g' $VALIDATOR1_APP_TOML
+#sed -i -E 's|0.0.0.0:9091|0.0.0.0:9081|g' $VALIDATOR1_APP_TOML
+#sed -i -E 's|0.0.0.0:8080|0.0.0.0:8000|g' $VALIDATOR1_APP_TOML
+#sed -i -E 's|tcp://0.0.0.0:1317|tcp://0.0.0.0:1311|g' $VALIDATOR1_APP_TOML
+
+# validator2, need to change 9090 port as it conflicts with prometheus port
+sed -i -E 's|0.0.0.0:9090|0.0.0.0:9060|g' $VALIDATOR2_APP_TOML
+sed -i -E 's|0.0.0.0:8545|0.0.0.0:8515|g' $VALIDATOR2_APP_TOML
+sed -i -E 's|0.0.0.0:8546|0.0.0.0:8586|g' $VALIDATOR2_APP_TOML
+sed -i -E 's|0.0.0.0:9091|0.0.0.0:9082|g' $VALIDATOR2_APP_TOML
+sed -i -E 's|address = ":8080"|address = ":8010"|g' $VALIDATOR2_APP_TOML
+sed -i -E 's|tcp://0.0.0.0:1317|tcp://0.0.0.0:1312|g' $VALIDATOR2_APP_TOML
+
+# validator3, need to change 9090 port as it conflicts with prometheus port
+sed -i -E 's|0.0.0.0:9090|0.0.0.0:9070|g' $VALIDATOR3_APP_TOML
+sed -i -E 's|0.0.0.0:8545|0.0.0.0:8525|g' $VALIDATOR3_APP_TOML
+sed -i -E 's|0.0.0.0:8546|0.0.0.0:8576|g' $VALIDATOR3_APP_TOML
+sed -i -E 's|0.0.0.0:9091|0.0.0.0:9083|g' $VALIDATOR3_APP_TOML
+sed -i -E 's|address = ":8080"|address = ":8020"|g' $VALIDATOR3_APP_TOML
+sed -i -E 's|tcp://0.0.0.0:1317|tcp://0.0.0.0:1313|g' $VALIDATOR3_APP_TOML
+
+# validator4, need to change 9090 port as it conflicts with prometheus port
+sed -i -E 's|0.0.0.0:9090|0.0.0.0:9080|g' $VALIDATOR4_APP_TOML
+sed -i -E 's|0.0.0.0:8545|0.0.0.0:8535|g' $VALIDATOR4_APP_TOML
+sed -i -E 's|0.0.0.0:8546|0.0.0.0:8566|g' $VALIDATOR4_APP_TOML
+sed -i -E 's|0.0.0.0:9091|0.0.0.0:9084|g' $VALIDATOR4_APP_TOML
+sed -i -E 's|address = ":8080"|address = ":8030"|g' $VALIDATOR4_APP_TOML
+sed -i -E 's|tcp://0.0.0.0:1317|tcp://0.0.0.0:1314|g' $VALIDATOR4_APP_TOML
+
+# change config.toml values
+VALIDATOR1_CONFIG=$HOME/.bfhevm/validator1/config/config.toml
+VALIDATOR2_CONFIG=$HOME/.bfhevm/validator2/config/config.toml
+VALIDATOR3_CONFIG=$HOME/.bfhevm/validator3/config/config.toml
+VALIDATOR4_CONFIG=$HOME/.bfhevm/validator4/config/config.toml
+
+# validator1
+sed -i -E 's|allow_duplicate_ip = false|allow_duplicate_ip = true|g' $VALIDATOR1_CONFIG
+# sed -i -E 's|version = "v0"|version = "v1"|g' $VALIDATOR1_CONFIG
+sed -i -E 's|prometheus = false|prometheus = true|g' $VALIDATOR1_CONFIG
+sed -i -E 's|tcp://127.0.0.1:26658|tcp://0.0.0.0:26658|g' $VALIDATOR1_CONFIG
+#sed -i -E 's|tcp://0.0.0.0:26658|tcp://0.0.0.0:26618|g' $VALIDATOR1_CONFIG
+sed -i -E 's|tcp://127.0.0.1:26657|tcp://0.0.0.0:26657|g' $VALIDATOR1_CONFIG
+#sed -i -E 's|tcp://0.0.0.0:26657|tcp://0.0.0.0:26617|g' $VALIDATOR1_CONFIG
+sed -i -E 's|tcp://0.0.0.0:26656|tcp://0.0.0.0:26656|g' $VALIDATOR1_CONFIG
+#sed -i -E 's|prometheus_listen_addr = ":26660"|prometheus_listen_addr = ":26610"|g' $VALIDATOR1_CONFIG
+
+# validator2
+sed -i -E 's|tcp://127.0.0.1:26658|tcp://0.0.0.0:26628|g' $VALIDATOR2_CONFIG
+sed -i -E 's|tcp://0.0.0.0:26658|tcp://0.0.0.0:26628|g' $VALIDATOR2_CONFIG
+sed -i -E 's|tcp://127.0.0.1:26657|tcp://0.0.0.0:26627|g' $VALIDATOR2_CONFIG
+sed -i -E 's|tcp://0.0.0.0:26657|tcp://0.0.0.0:26627|g' $VALIDATOR2_CONFIG
+sed -i -E 's|tcp://0.0.0.0:26656|tcp://0.0.0.0:26626|g' $VALIDATOR2_CONFIG
+sed -i -E 's|allow_duplicate_ip = false|allow_duplicate_ip = true|g' $VALIDATOR2_CONFIG
+sed -i -E 's|prometheus = false|prometheus = true|g' $VALIDATOR2_CONFIG
+sed -i -E 's|prometheus_listen_addr = ":26660"|prometheus_listen_addr = ":26620"|g' $VALIDATOR2_CONFIG
+#sed -i -E 's|0.0.0.0:9091|0.0.0.0:9081|g' $VALIDATOR1_APP_TOML
+#sed -i -E 's|0.0.0.0:8080|0.0.0.0:8000|g' $VALIDATOR1_APP_TOML
+#sed -i -E 's|tcp://0.0.0.0:1317|tcp://0.0.0.0:1311|g' $VALIDATOR1_APP_TOML
+
+# validator2, need to change 9090 port as it conflicts with prometheus port
+sed -i -E 's|0.0.0.0:9090|0.0.0.0:9060|g' $VALIDATOR2_APP_TOML
+sed -i -E 's|0.0.0.0:8545|0.0.0.0:8515|g' $VALIDATOR2_APP_TOML
+sed -i -E 's|0.0.0.0:8546|0.0.0.0:8586|g' $VALIDATOR2_APP_TOML
+sed -i -E 's|0.0.0.0:9091|0.0.0.0:9082|g' $VALIDATOR2_APP_TOML
+sed -i -E 's|address = ":8080"|address = ":8010"|g' $VALIDATOR2_APP_TOML
+sed -i -E 's|tcp://0.0.0.0:1317|tcp://0.0.0.0:1312|g' $VALIDATOR2_APP_TOML
+
+# validator3, need to change 9090 port as it conflicts with prometheus port
+sed -i -E 's|0.0.0.0:9090|0.0.0.0:9070|g' $VALIDATOR3_APP_TOML
+sed -i -E 's|0.0.0.0:8545|0.0.0.0:8525|g' $VALIDATOR3_APP_TOML
+sed -i -E 's|0.0.0.0:8546|0.0.0.0:8576|g' $VALIDATOR3_APP_TOML
+sed -i -E 's|0.0.0.0:9091|0.0.0.0:9083|g' $VALIDATOR3_APP_TOML
+sed -i -E 's|address = ":8080"|address = ":8020"|g' $VALIDATOR3_APP_TOML
+sed -i -E 's|tcp://0.0.0.0:1317|tcp://0.0.0.0:1313|g' $VALIDATOR3_APP_TOML
+
+# validator4, need to change 9090 port as it conflicts with prometheus port
+sed -i -E 's|0.0.0.0:9090|0.0.0.0:9080|g' $VALIDATOR4_APP_TOML
+sed -i -E 's|0.0.0.0:8545|0.0.0.0:8535|g' $VALIDATOR4_APP_TOML
+sed -i -E 's|0.0.0.0:8546|0.0.0.0:8566|g' $VALIDATOR4_APP_TOML
+sed -i -E 's|0.0.0.0:9091|0.0.0.0:9084|g' $VALIDATOR4_APP_TOML
+sed -i -E 's|address = ":8080"|address = ":8030"|g' $VALIDATOR4_APP_TOML
+sed -i -E 's|tcp://0.0.0.0:1317|tcp://0.0.0.0:1314|g' $VALIDATOR4_APP_TOML
+
+# change config.toml values
+VALIDATOR1_CONFIG=$HOME/.bfhevm/validator1/config/config.toml
+VALIDATOR2_CONFIG=$HOME/.bfhevm/validator2/config/config.toml
+VALIDATOR3_CONFIG=$HOME/.bfhevm/validator3/config/config.toml
+VALIDATOR4_CONFIG=$HOME/.bfhevm/validator4/config/config.toml
+
+# validator1
+sed -i -E 's|allow_duplicate_ip = false|allow_duplicate_ip = true|g' $VALIDATOR1_CONFIG
+# sed -i -E 's|version = "v0"|version = "v1"|g' $VALIDATOR1_CONFIG
+sed -i -E 's|prometheus = false|prometheus = true|g' $VALIDATOR1_CONFIG
+sed -i -E 's|tcp://127.0.0.1:26658|tcp://0.0.0.0:26658|g' $VALIDATOR1_CONFIG
+#sed -i -E 's|tcp://0.0.0.0:26658|tcp://0.0.0.0:26618|g' $VALIDATOR1_CONFIG
+sed -i -E 's|tcp://127.0.0.1:26657|tcp://0.0.0.0:26657|g' $VALIDATOR1_CONFIG
+#sed -i -E 's|tcp://0.0.0.0:26657|tcp://0.0.0.0:26617|g' $VALIDATOR1_CONFIG
+sed -i -E 's|tcp://0.0.0.0:26656|tcp://0.0.0.0:26656|g' $VALIDATOR1_CONFIG
+#sed -i -E 's|prometheus_listen_addr = ":26660"|prometheus_listen_addr = ":26610"|g' $VALIDATOR1_CONFIG
+
+# validator2
+sed -i -E 's|tcp://127.0.0.1:26658|tcp://0.0.0.0:26628|g' $VALIDATOR2_CONFIG
+sed -i -E 's|tcp://0.0.0.0:26658|tcp://0.0.0.0:26628|g' $VALIDATOR2_CONFIG
+sed -i -E 's|tcp://127.0.0.1:26657|tcp://0.0.0.0:26627|g' $VALIDATOR2_CONFIG
+sed -i -E 's|tcp://0.0.0.0:26657|tcp://0.0.0.0:26627|g' $VALIDATOR2_CONFIG
+sed -i -E 's|tcp://0.0.0.0:26656|tcp://0.0.0.0:26626|g' $VALIDATOR2_CONFIG
+sed -i -E 's|allow_duplicate_ip = false|allow_duplicate_ip = true|g' $VALIDATOR2_CONFIG
+sed -i -E 's|prometheus = false|prometheus = true|g' $VALIDATOR2_CONFIG
+sed -i -E 's|prometheus_listen_addr = ":26660"|prometheus_listen_addr = ":26620"|g' $VALIDATOR2_CONFIG
+
+# validator3
+sed -i -E 's|tcp://127.0.0.1:26658|tcp://0.0.0.0:26638|g' $VALIDATOR3_CONFIG
+sed -i -E 's|tcp://127.0.0.1:26657|tcp://0.0.0.0:26637|g' $VALIDATOR3_CONFIG
+sed -i -E 's|tcp://0.0.0.0:26658|tcp://0.0.0.0:26638|g' $VALIDATOR3_CONFIG
+sed -i -E 's|tcp://0.0.0.0:26657|tcp://0.0.0.0:26637|g' $VALIDATOR3_CONFIG
+sed -i -E 's|tcp://0.0.0.0:26656|tcp://0.0.0.0:26636|g' $VALIDATOR3_CONFIG
+sed -i -E 's|allow_duplicate_ip = false|allow_duplicate_ip = true|g' $VALIDATOR3_CONFIG
+sed -i -E 's|prometheus = false|prometheus = true|g' $VALIDATOR3_CONFIG
+sed -i -E 's|prometheus_listen_addr = ":26660"|prometheus_listen_addr = ":26630"|g' $VALIDATOR3_CONFIG
+
+# validator4
+sed -i -E 's|tcp://127.0.0.1:26658|tcp://0.0.0.0:26648|g' $VALIDATOR4_CONFIG
+sed -i -E 's|tcp://127.0.0.1:26657|tcp://0.0.0.0:26647|g' $VALIDATOR4_CONFIG
+sed -i -E 's|tcp://0.0.0.0:26658|tcp://0.0.0.0:26648|g' $VALIDATOR4_CONFIG
+sed -i -E 's|tcp://0.0.0.0:26657|tcp://0.0.0.0:26647|g' $VALIDATOR4_CONFIG
+sed -i -E 's|tcp://0.0.0.0:26656|tcp://0.0.0.0:26646|g' $VALIDATOR4_CONFIG
+sed -i -E 's|allow_duplicate_ip = false|allow_duplicate_ip = true|g' $VALIDATOR4_CONFIG
+sed -i -E 's|prometheus = false|prometheus = true|g' $VALIDATOR4_CONFIG
+sed -i -E 's|prometheus_listen_addr = ":26660"|prometheus_listen_addr = ":26640"|g' $VALIDATOR4_CONFIG
+
+VALIDATOR1_CLIENT=$HOME/.bfhevm/validator1/config/client.toml
+VALIDATOR2_CLIENT=$HOME/.bfhevm/validator2/config/client.toml
+VALIDATOR3_CLIENT=$HOME/.bfhevm/validator3/config/client.toml
+VALIDATOR4_CLIENT=$HOME/.bfhevm/validator4/config/client.toml
+
+
+sed -i -E 's|tcp://localhost:26657|tcp://0.0.0.0:26617|g' $VALIDATOR1_CLIENT
+sed -i -E 's|tcp://localhost:26657|tcp://0.0.0.0:26627|g' $VALIDATOR2_CLIENT
+sed -i -E 's|tcp://localhost:26657|tcp://0.0.0.0:26637|g' $VALIDATOR3_CLIENT
+sed -i -E 's|tcp://localhost:26657|tcp://0.0.0.0:26647|g' $VALIDATOR4_CLIENT
+
+# port key (validator1 uses default ports)
+# validator1 1317:1311, 9090:9050, 9091:9081, 26658:26618, 26657:26617, 26656:26616, 6060:6010, 26660:26610, 8545:8505, 8546:8596
+# validator2 1312, 9060, 9082, 26628, 26627, 26626, 6020, 26620, 8515, 8586
+# validator3 1313, 9070, 9083, 26638, 26637, 26636, 6030, 26630, 8525, 8576
+# validator4 1314, 9080, 9084, 26648, 26647, 26646, 6040, 26640, 8535, 8566
+
+# copy validator1 genesis file to validator2-4
+cp $HOME/.bfhevm/validator1/config/genesis.json $HOME/.bfhevm/validator2/config/genesis.json
+cp $HOME/.bfhevm/validator1/config/genesis.json $HOME/.bfhevm/validator3/config/genesis.json
+cp $HOME/.bfhevm/validator1/config/genesis.json $HOME/.bfhevm/validator4/config/genesis.json
+
+
+# copy tendermint node id of validator1 to persistent peers of validator2-4
+sed -i -E "s|persistent_peers = \"\"|persistent_peers = \"$(bfhevmd tendermint show-node-id --home=$HOME/.bfhevm/validator1)@0.0.0.0:26656\"|g" $HOME/.bfhevm/validator2/config/config.toml
+sed -i -E "s|persistent_peers = \"\"|persistent_peers = \"$(bfhevmd tendermint show-node-id --home=$HOME/.bfhevm/validator1)@0.0.0.0:26656\"|g" $HOME/.bfhevm/validator3/config/config.toml
+sed -i -E "s|persistent_peers = \"\"|persistent_peers = \"$(bfhevmd tendermint show-node-id --home=$HOME/.bfhevm/validator1)@0.0.0.0:26656\"|g" $HOME/.bfhevm/validator4/config/config.toml
+
+# start all four validators
+tmux new -s validator1 -d bfhevmd start --home=$HOME/.bfhevm/validator1
+tmux new -s validator2 -d bfhevmd start --home=$HOME/.bfhevm/validator2
+tmux new -s validator3 -d bfhevmd start --home=$HOME/.bfhevm/validator3
+tmux new -s validator4 -d bfhevmd start --home=$HOME/.bfhevm/validator4
+
+
 # send abfh from first validator to second validator
 echo "Waiting 7 seconds to send funds to validators 2, 3, and 4..."
 sleep 7
